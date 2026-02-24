@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Anime Experience</title>
+    <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <div class="spotlight-background"></div>
+
+    <canvas id="webgl-canvas"></canvas>
+
+    <nav class="video-navbar">
+        <div class="nav-video-bg">
+            <video autoplay loop muted playsinline>
+                <source src="portal.mp4" type="video/mp4">
+            </video>
+            <div class="video-overlay"></div>
+        </div>
+
+        <div class="nav-content">
+            <div class="brand-logo">
+                <span class="logo-text">UNDOLIGHT</span>
+                <div class="logo-dot"></div>
+            </div>
+
+            <ul class="nav-links">
+                <li><a href="#" class="active">HOME</a></li>
+                <li><a href="#">MANHWA</a></li>
+                <li><a href="#">EDITS</a></li>
+                <li><a href="#">SERIES</a></li>
+            </ul>
+
+            <div class="nav-actions">
+                <div class="search-box">
+                    <input type="text" placeholder="SEARCH...">
+                    <button class="search-btn">
+                        <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                    </button>
+                </div>
+                <button class="enter-btn">SYSTEM LOGIN</button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="main-container">
+        <h1>WELCOME</h1>
+    </div>
+
+    <footer class="cyber-footer">
+        <div class="footer-content">
+            
+            <div class="footer-col brand-col">
+                <h2 class="footer-logo" data-text="UNDOLIGHT">UNDOLIGHT</h2>
+                <p class="footer-tagline">Transcend Reality. Enter the Void.</p>
+            </div>
+
+            <div class="footer-col links-col">
+                <h3>EXPLORE</h3>
+                <ul>
+                    <li><a href="#">Latest Edits</a></li>
+                    <li><a href="#">Manhwa List</a></li>
+                    <li><a href="#">Community</a></li>
+                    <li><a href="#">System Status</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col social-col">
+                <h3>CONNECT</h3>
+                <div class="social-icons">
+                    <a href="#" class="social-btn"><i class="fab fa-youtube"></i></a>
+                    <a href="#" class="social-btn"><i class="fab fa-discord"></i></a>
+                    <a href="#" class="social-btn"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="social-btn"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+
+        </div>
+        
+        <div class="footer-bottom">
+            <p>&copy; 2025 UNDOLIGHT PROJECT. ALL RIGHTS RESERVED.</p>
+        </div>
+    </footer>
+
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+                "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+            }
+        }
+    </script>
+
+    <script type="module">
+        import * as THREE from 'three';
+        import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+
+        const canvas = document.querySelector('#webgl-canvas');
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.set(0, 0, 10); 
+
+        const renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(window.devicePixelRatio);
+
+        const ambientLight = new THREE.AmbientLight(0xffffff, 1.2);
+        scene.add(ambientLight);
+        const neonLight = new THREE.PointLight(0xff6600, 80, 200); 
+        neonLight.position.set(10, 10, 10);
+        scene.add(neonLight);
+        const rimLight = new THREE.PointLight(0x0088ff, 50, 200);
+        rimLight.position.set(-10, 10, -10);
+        scene.add(rimLight);
+
+        const loader = new GLTFLoader();
+        loader.load('luffy_hat/scene.gltf', function (gltf) {
+            const model = gltf.scene;
+            model.scale.set(3.5, 3.5, 3.5); 
+            model.position.set(0, -0.5, 0); 
+            model.rotation.x = 0.5; 
+            scene.add(model);
+
+            function animate() {
+                requestAnimationFrame(animate);
+                model.rotation.y += 0.005; 
+                renderer.render(scene, camera);
+            }
+            animate();
+        }, undefined, function (error) { console.error(error); });
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+    </script>
+</body>
+</html>
