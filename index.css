@@ -1,183 +1,53 @@
-/* --- CORE SETUP --- */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+:root { --neon: #ff6600; --bg: #050505; --glass: rgba(255, 255, 255, 0.02); }
+* { margin: 0; padding: 0; box-sizing: border-box; cursor: none !important; }
+
+body { background: var(--bg); color: #fff; font-family: 'Inter', sans-serif; overflow-x: hidden; }
+
+/* THE DIFFERENCE CURSOR (Fixed snappy response) */
+.cursor {
+    width: 12px; height: 12px; background: #fff; border-radius: 50%;
+    position: fixed; pointer-events: none; z-index: 10000;
+    mix-blend-mode: difference;
 }
 
-:root {
-    --neon-orange: #ff6600;
-    --neon-blue: #0088ff;
-    --glass: rgba(255, 255, 255, 0.05);
-    --glass-border: rgba(255, 255, 255, 0.1);
-}
+/* 3D CANVAS & BG TEXT */
+#webgl-canvas { position: fixed; inset: 0; z-index: 5; pointer-events: none; }
+.bg-text-container { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; z-index: -1; }
+.bg-text { font-size: 25vw; font-weight: 900; color: transparent; -webkit-text-stroke: 1px rgba(255, 102, 0, 0.1); }
 
-body {
-    font-family: 'Inter', sans-serif;
-    background-color: #000;
-    color: #fff;
-    overflow-x: hidden;
-}
-
-/* --- THE STICKY 3D ENGINE --- */
-#webgl-canvas {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    z-index: 0; /* Keep behind text but above spotlight */
-    pointer-events: none; /* Let clicks pass through to links */
-}
-
-/* --- SECTION ARCHITECTURE --- */
-.section {
-    position: relative;
-    width: 100%;
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    padding: 0 10%;
-    z-index: 2;
-}
-
-.hero { justify-content: center; text-align: center; }
+/* SECTIONS */
+.section { min-height: 100vh; display: flex; align-items: center; padding: 0 10%; position: relative; z-index: 10; }
 .side-content { justify-content: flex-start; }
+.right-content { justify-content: flex-end; }
 .center-content { justify-content: center; }
 
-/* --- JAW-DROPPING TYPOGRAPHY --- */
-.glitch-text {
-    font-size: clamp(3rem, 10vw, 8rem);
-    font-weight: 900;
-    letter-spacing: -2px;
-    position: relative;
-    text-shadow: 0 0 20px rgba(255, 102, 0, 0.5);
-}
-
-.subtitle {
-    font-size: 1.2rem;
-    color: var(--neon-orange);
-    letter-spacing: 5px;
-    margin-top: 10px;
-    opacity: 0.8;
-}
-
-/* --- GLASSMORPHISM UI --- */
+/* CARDS */
 .glass-card {
-    background: var(--glass);
-    backdrop-filter: blur(15px);
-    border: 1px solid var(--glass-border);
-    padding: 3rem;
-    border-radius: 24px;
-    max-width: 500px;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.4);
-    transition: transform 0.3s ease;
+    background: var(--glass); backdrop-filter: blur(30px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 60px; border-radius: 2px; max-width: 500px;
+    pointer-events: all;
 }
+.tag { font-family: 'Syncopate', sans-serif; font-size: 0.6rem; color: var(--neon); letter-spacing: 4px; display: block; margin-bottom: 20px; }
+.glass-card h2 { font-family: 'Syncopate', sans-serif; margin-bottom: 20px; font-size: 1.8rem; }
 
-.glass-card:hover {
-    border-color: var(--neon-orange);
-    transform: translateY(-10px);
-}
+/* STATUS GRID */
+.status-grid { display: flex; gap: 50px; text-align: center; pointer-events: all; }
+.status-item span { display: block; font-size: 0.7rem; color: #555; letter-spacing: 2px; }
+.status-item strong { font-size: 1.5rem; color: var(--neon); font-family: 'Syncopate', sans-serif; }
 
-.glass-card h2 {
-    color: var(--neon-orange);
-    margin-bottom: 1rem;
-    font-size: 2rem;
-}
+/* VIDEO NAVBAR */
+.video-navbar { position: fixed; top: 0; width: 100%; height: 80px; z-index: 100; border-bottom: 1px solid rgba(255, 102, 0, 0.2); }
+.nav-video-bg { position: absolute; inset: 0; z-index: -1; overflow: hidden; }
+.nav-video-bg video { width: 100%; height: 100%; object-fit: cover; filter: brightness(0.3); }
+.nav-content { display: flex; justify-content: space-between; align-items: center; height: 100%; padding: 0 50px; }
+.nav-links { display: flex; gap: 40px; list-style: none; }
+.nav-links a { text-decoration: none; color: #fff !important; font-weight: 900; font-size: 0.7rem; letter-spacing: 2px; transition: 0.3s; }
+.nav-links a:hover { color: var(--neon) !important; text-shadow: 0 0 10px var(--neon); }
 
-/* --- INTERACTIVE NAV (UPGRADED) --- */
-.video-navbar {
-    position: fixed;
-    top: 0;
-    width: 100%;
-    height: 80px;
-    z-index: 1000;
-    display: flex;
-    align-items: center;
-    border-bottom: 1px solid var(--glass-border);
-}
-
-.nav-video-bg {
-    position: absolute;
-    inset: 0;
-    z-index: -1;
-    overflow: hidden;
-}
-
-.nav-video-bg video {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    filter: brightness(0.4);
-}
-
-.nav-content {
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-    padding: 0 50px;
-    align-items: center;
-}
-
-/* --- BUTTONS & ACTIONS --- */
-.enter-btn, .cta-btn {
-    padding: 12px 30px;
-    background: var(--neon-orange);
-    border: none;
-    color: #000;
-    font-weight: 900;
-    border-radius: 4px;
-    cursor: pointer;
-    clip-path: polygon(10% 0, 100% 0, 90% 100%, 0 100%);
-    transition: 0.3s;
-}
-
-.cta-btn:hover {
-    box-shadow: 0 0 30px var(--neon-orange);
-    transform: scale(1.1);
-}
-
-/* --- SCROLL INDICATOR --- */
-.scroll-indicator {
-    position: absolute;
-    bottom: 30px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-    font-size: 0.7rem;
-    letter-spacing: 2px;
-}
-
-.mouse {
-    width: 20px;
-    height: 35px;
-    border: 2px solid #fff;
-    border-radius: 20px;
-    position: relative;
-}
-
-.mouse::before {
-    content: '';
-    position: absolute;
-    top: 5px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 4px;
-    height: 8px;
-    background: #fff;
-    border-radius: 2px;
-    animation: scroll 1.5s infinite;
-}
-
-@keyframes scroll {
-    0% { transform: translate(-50%, 0); opacity: 1; }
-    100% { transform: translate(-50%, 15px); opacity: 0; }
-}
-
-/* Keep your existing Cyber Footer styles below but ensure z-index is high */
-.cyber-footer {
-    z-index: 10;
-    background: #000;
-    /* ... keep your footer code here ... */
-}
+/* LOADER */
+#loader { position: fixed; inset: 0; background: #000; z-index: 9999; display: flex; align-items: center; justify-content: center; }
+.loader-text { font-family: 'Syncopate', sans-serif; color: var(--neon); letter-spacing: 10px; font-size: 0.8rem; margin-bottom: 20px; }
+.progress-bar { width: 300px; height: 1px; background: #111; position: relative; }
+.progress-fill { width: 0%; height: 100%; background: var(--neon); }
+#enter-btn { padding: 15px 40px; background: transparent; border: 1px solid var(--neon); color: var(--neon); font-family: 'Syncopate', sans-serif; cursor: pointer; margin-top: 20px; }

@@ -3,75 +3,86 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UNDOLIGHT | 3D Anime Experience</title>
+    <title>UNDOLIGHT | The 3D Anime Experience</title>
     <link rel="stylesheet" href="index.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@700&family=Inter:wght@400;900&display=swap" rel="stylesheet">
 </head>
 <body>
 
+    <div id="loader">
+        <div class="loader-content">
+            <h2 class="loader-text">SYNCING VOID_CORE</h2>
+            <div class="progress-bar"><div class="progress-fill"></div></div>
+            <button id="enter-btn" style="display:none;">INITIALIZE SYSTEM</button>
+        </div>
+    </div>
+
+    <div class="cursor"></div>
+    <div class="bg-text-container"><h1 class="bg-text">UNDOLIGHT</h1></div>
     <canvas id="webgl-canvas"></canvas>
 
     <nav class="video-navbar">
         <div class="nav-video-bg">
-            <video autoplay loop muted playsinline>
-                <source src="portal.mp4" type="video/mp4">
-            </video>
+            <video autoplay loop muted playsinline><source src="portal.mp4" type="video/mp4"></video>
             <div class="video-overlay"></div>
         </div>
         <div class="nav-content">
-            <div class="brand-logo">
-                <span class="logo-text">UNDOLIGHT</span>
-                <div class="logo-dot"></div>
-            </div>
+            <div class="brand-logo"><span class="logo-text">UNDOLIGHT</span></div>
             <ul class="nav-links">
-                <li><a href="#" class="active">HOME</a></li>
-                <li><a href="#">MANHWA</a></li>
-                <li><a href="#">EDITS</a></li>
-                <li><a href="#">SERIES</a></li>
+                <li><a href="#hero">HOME</a></li>
+                <li><a href="#about">THE VOID</a></li>
+                <li><a href="#archive">ARCHIVE</a></li>
+                <li><a href="#footer">CONNECT</a></li>
             </ul>
-            <div class="nav-actions">
-                <button class="enter-btn">SYSTEM LOGIN</button>
-            </div>
         </div>
     </nav>
 
-    <div id="smooth-wrapper">
+    <main id="smooth-wrapper">
         <div id="smooth-content">
-            
-            <section class="section hero">
-                <div class="hero-content">
-                    <h1 class="glitch-text" data-text="TRANSCEND">TRANSCEND</h1>
-                    <p class="subtitle">Experience the Void in 3D</p>
-                    <div class="scroll-indicator">
-                        <span>SCROLL TO ENTER</span>
-                        <div class="mouse"></div>
-                    </div>
+            <section class="section hero" id="hero">
+                <div class="hero-card">
+                    <p class="protocol">CORE PROTOCOL // 001</p>
+                    <h1 class="main-title">LIMITLESS<br>DIMENSION</h1>
                 </div>
             </section>
 
-            <section class="section side-content">
-                <div class="glass-card left">
-                    <h2>THE STRAW HAT</h2>
-                    <p>A symbol of freedom and the king of the seas. Modelled in high fidelity, rendered in real-time.</p>
+            <section class="section side-content" id="about">
+                <div class="glass-card">
+                    <span class="tag">02 / MISSION</span>
+                    <h2>CULTURAL SYNTHESIS</h2>
+                    <p>Undolight is a digital sanctuary where Manhwa, Anime, and 3D engineering collide. We don't just edit; we reconstruct reality.</p>
+                </div>
+            </section>
+
+            <section class="section right-content" id="archive">
+                <div class="glass-card right">
+                    <span class="tag">03 / ARCHIVE</span>
+                    <h2>THE COLLECTION</h2>
+                    <p>Dive into a curated selection of motion edits and deep-dive manhwa reviews. Every frame is optimized for the grid.</p>
+                    <button class="cta-btn">VIEW ALL EDITS</button>
                 </div>
             </section>
 
             <section class="section center-content">
-                <div class="glass-card">
-                    <h2>JOIN THE SYSTEM</h2>
-                    <button class="cta-btn">INITIALIZE</button>
+                <div class="status-grid">
+                    <div class="status-item"><span>RENDER</span><strong>STABLE</strong></div>
+                    <div class="status-item"><span>UPTIME</span><strong>99.9%</strong></div>
+                    <div class="status-item"><span>SYNC</span><strong>ACTIVE</strong></div>
                 </div>
             </section>
 
-            <footer class="cyber-footer">
+            <footer class="cyber-footer" id="footer">
                 <div class="footer-content">
                     <div class="footer-col brand-col">
                         <h2 class="footer-logo">UNDOLIGHT</h2>
-                        <p class="footer-tagline">Transcend Reality. Enter the Void.</p>
+                        <p>Transcend the ordinary. Join the system.</p>
                     </div>
-                    <div class="footer-col social-col">
-                        <h3>CONNECT</h3>
+                    <div class="footer-col links-col">
+                        <h3>RESOURCES</h3>
+                        <ul><li><a href="#">SYSTEM STATUS</a></li><li><a href="#">COMMUNITY</a></li></ul>
+                    </div>
+                    <div class="footer-col">
                         <div class="social-icons">
                             <a href="#" class="social-btn"><i class="fab fa-youtube"></i></a>
                             <a href="#" class="social-btn"><i class="fab fa-discord"></i></a>
@@ -79,25 +90,14 @@
                         </div>
                     </div>
                 </div>
-                <div class="footer-bottom">
-                    <p>&copy; 2026 UNDOLIGHT PROJECT.</p>
-                </div>
+                <div class="footer-bottom"><p>&copy; 2026 UNDOLIGHT PROJECT.</p></div>
             </footer>
         </div>
-    </div>
+    </main>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-
-    <script type="importmap">
-        {
-            "imports": {
-                "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
-                "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
-            }
-        }
-    </script>
-
+    <script type="importmap">{ "imports": { "three": "https://unpkg.com/three@0.160.0/build/three.module.js", "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/" } }</script>
     <script type="module" src="main.js"></script>
 </body>
 </html>
