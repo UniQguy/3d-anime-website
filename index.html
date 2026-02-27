@@ -3,101 +3,268 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UNDOLIGHT | The 3D Anime Experience</title>
+    <title>PRASHANT | 3D Creative Engineer</title>
     <link rel="stylesheet" href="index.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@700&family=Inter:wght@400;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=Inter:wght@300;400;700;900&family=VT323&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
 </head>
 <body>
 
     <div id="loader">
         <div class="loader-content">
-            <h2 class="loader-text">SYNCING VOID_CORE</h2>
+            <h2 class="loader-text reveal-text">SYNCING PORTFOLIO_CORE</h2>
             <div class="progress-bar"><div class="progress-fill"></div></div>
-            <button id="enter-btn" style="display:none;">INITIALIZE SYSTEM</button>
+            <div class="loader-details fade-up">ASSETS: SECURED // PHYSICS: ONLINE</div>
+            <button id="enter-btn" class="magnetic" style="display:none;">INITIALIZE SYSTEM</button>
+        </div>
+    </div>
+
+    <div id="terminal-overlay">
+        <div class="crt-scanlines"></div>
+        <div class="terminal-content">
+            <div class="terminal-header">
+                <span>sys_admin@prashant:~</span>
+                <span id="close-terminal" class="magnetic">[X] ABORT</span>
+            </div>
+            <div class="terminal-body" id="terminal-text"></div>
+        </div>
+    </div>
+
+    <div id="summary-overlay">
+        <div class="summary-card">
+            <button id="close-summary" class="magnetic"><i class="fas fa-times"></i></button>
+            <div class="summary-header">
+                <span class="tag">EXECUTIVE DATA</span>
+                <h2 class="neon-text" style="font-size: 2.5rem; margin-bottom: 20px;">PORTFOLIO SUMMARY</h2>
+            </div>
+            <div class="summary-stats">
+                <div class="stat-box">
+                    <span class="stat-label">ROLE</span>
+                    <span class="stat-value">Creative Engineer</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-label">FOCUS</span>
+                    <span class="stat-value">WebGL & App Arch.</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-label">BASE</span>
+                    <span class="stat-value">Ahmedabad, IN</span>
+                </div>
+            </div>
+            <p class="summary-desc">
+                Operating at the intersection of high-fidelity aesthetics and robust backend architecture. 
+                Specialized in deploying seamless digital ecosystems using Flutter, Three.js, and Firebase. 
+                Currently exploring advanced system defense protocols alongside 3D spatial reconstruction.
+            </p>
         </div>
     </div>
 
     <div class="cursor"></div>
-    <div class="bg-text-container"><h1 class="bg-text">UNDOLIGHT</h1></div>
+    
+    <div class="bg-text-container">
+        <h1 class="bg-text" data-speed="0.8">UNDOLIGHT</h1>
+    </div>
+
     <canvas id="webgl-canvas"></canvas>
 
     <nav class="video-navbar">
         <div class="nav-video-bg">
-            <video autoplay loop muted playsinline><source src="portal.mp4" type="video/mp4"></video>
+            <video autoplay loop muted playsinline>
+                <source src="portal.mp4" type="video/mp4">
+            </video>
             <div class="video-overlay"></div>
         </div>
         <div class="nav-content">
-            <div class="brand-logo"><span class="logo-text">UNDOLIGHT</span></div>
+            <div class="brand-logo"><span class="logo-text">PRASHANT</span></div>
             <ul class="nav-links">
-                <li><a href="#hero">HOME</a></li>
-                <li><a href="#about">THE VOID</a></li>
-                <li><a href="#archive">ARCHIVE</a></li>
-                <li><a href="#footer">CONNECT</a></li>
+                <li><a href="#hero" class="nav-item magnetic">HOME</a></li>
+                <li><a href="#about" class="nav-item magnetic">IDENTITY</a></li>
+                <li><a href="#arsenal" class="nav-item magnetic">ARSENAL</a></li>
+                <li><a href="#evolution" class="nav-item magnetic">EVOLUTION</a></li>
+                <li><a href="#projects" class="nav-item magnetic">PROJECTS</a></li>
             </ul>
         </div>
     </nav>
 
     <main id="smooth-wrapper">
         <div id="smooth-content">
+            
             <section class="section hero" id="hero">
-                <div class="hero-card">
-                    <p class="protocol">CORE PROTOCOL // 001</p>
-                    <h1 class="main-title">LIMITLESS<br>DIMENSION</h1>
+                <div class="hero-layout-grid">
+                    
+                    <div class="hero-left">
+                        <div class="hero-card">
+                            <p class="protocol fade-up">DEVELOPER PROTOCOL // 001</p>
+                            <h1 class="main-title reveal-text">CREATIVE<br>ENGINEER</h1>
+                            <div class="hero-line fade-up"></div>
+                            <p class="fade-up sys-hint">TYPE [ V O I D ] TO OVERRIDE SYSTEM</p>
+                        </div>
+                    </div>
+
+                    <div class="hero-center"></div>
+
+                    <div class="hero-right">
+                        <div class="hud-panel fade-up">
+                            <div class="hud-item">
+                                <span class="hud-label">SYSTEM STATUS</span>
+                                <span class="hud-value blink">OPTIMAL</span>
+                            </div>
+                            <div class="hud-item">
+                                <span class="hud-label">FRAMEWORK</span>
+                                <span class="hud-value">THREE.JS + GSAP</span>
+                            </div>
+                            <div class="hud-item">
+                                <span class="hud-label">LOCATION_LAT/LONG</span>
+                                <span class="hud-value">23.0225° N, 72.5714° E</span>
+                            </div>
+                            <div class="hud-decoration">
+                                <svg width="50" height="50" viewBox="0 0 100 100">
+                                    <circle cx="50" cy="50" r="45" fill="none" stroke="#000" stroke-width="2" stroke-dasharray="15 10" class="spin-slow" />
+                                    <circle cx="50" cy="50" r="15" fill="#000" />
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </section>
 
             <section class="section side-content" id="about">
-                <div class="glass-card">
-                    <span class="tag">02 / MISSION</span>
-                    <h2>CULTURAL SYNTHESIS</h2>
-                    <p>Undolight is a digital sanctuary where Manhwa, Anime, and 3D engineering collide. We don't just edit; we reconstruct reality.</p>
+                <div class="glass-card 3d-card" style="position: relative;">
+                    
+                    <div id="cat-trigger" class="magnetic" title="Click to view Executive Summary">
+                        <lottie-player src="ghibli.json" background="transparent" speed="1" loop autoplay></lottie-player>
+                    </div>
+
+                    <span class="tag">02 / IDENTITY</span>
+                    <h2>PRASHANT</h2>
+                    <p>Bridging the gap between high-end aesthetic interfaces and robust backend logic. Code is the canvas; physics is the paint.</p>
                 </div>
             </section>
 
-            <section class="section right-content" id="archive">
-                <div class="glass-card right">
-                    <span class="tag">03 / ARCHIVE</span>
-                    <h2>THE COLLECTION</h2>
-                    <p>Dive into a curated selection of motion edits and deep-dive manhwa reviews. Every frame is optimized for the grid.</p>
-                    <button class="cta-btn">VIEW ALL EDITS</button>
+            <section class="section center-content" id="arsenal">
+                <div class="matrix-container">
+                    <div class="matrix-header text-center">
+                        <span class="tag fade-up">03 / CAPABILITIES</span>
+                        <h2 class="reveal-text" style="font-size: 3.5rem; margin-bottom: 50px;">THE ARSENAL</h2>
+                    </div>
+                    <div class="grid-2-col">
+                        <div class="glass-card matrix-card 3d-card">
+                            <h3 class="neon-text">LOGIC_CORE</h3>
+                            <ul class="skill-list">
+                                <li><strong>FLUTTER:</strong> Cross-platform architecture</li>
+                                <li><strong>ANGULAR:</strong> Enterprise-scale web UI</li>
+                                <li><strong>FIREBASE:</strong> Real-time auth & databases</li>
+                                <li><strong>CYBER SECURITY:</strong> System defense protocols</li>
+                            </ul>
+                        </div>
+                        <div class="glass-card matrix-card 3d-card border-left-split">
+                            <h3 class="neon-text">CREATIVE_CORE</h3>
+                            <ul class="skill-list">
+                                <li><strong>THREE.JS:</strong> 3D WebGL rendering</li>
+                                <li><strong>DAVINCI RESOLVE:</strong> Cinematic color & motion</li>
+                                <li><strong>GSAP:</strong> Physics-based kinetic animation</li>
+                                <li><strong>MOTION EDITS:</strong> Spatial reconstruction</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section side-content" id="evolution" style="padding-top: 100px;">
+                <div class="timeline-container">
+                    <span class="tag fade-up">04 / THE JOURNEY</span>
+                    <h2 class="reveal-text" style="font-size: 3.5rem; margin-bottom: 50px;">EVOLUTION</h2>
+                    
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <div class="timeline-dot"></div>
+                            <div class="timeline-content glass-card 3d-card">
+                                <span class="neon-text timeline-date">MILESTONE ALPHA</span>
+                                <h3>FOUNDATION</h3>
+                                <p>Successfully completed BCA, laying the groundwork in structured object-oriented analysis, logic, and core computing principles.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="timeline-item">
+                            <div class="timeline-dot"></div>
+                            <div class="timeline-content glass-card 3d-card">
+                                <span class="neon-text timeline-date">YT_INITIALIZE</span>
+                                <h3>UNDOLIGHT LAUNCH</h3>
+                                <p>Founded the 'undolight' YouTube channel. Merging deep dives into Manhwa/Anime with high-end DaVinci Resolve motion edits.</p>
+                            </div>
+                        </div>
+
+                        <div class="timeline-item">
+                            <div class="timeline-dot"></div>
+                            <div class="timeline-content glass-card 3d-card">
+                                <span class="neon-text timeline-date">CURRENT STATE</span>
+                                <h3>GLS UNIVERSITY // IMCA</h3>
+                                <p>Currently in the 6th Semester of the Integrated MCA program. Expanding into Cyber Security, enterprise architectures, and advanced web technologies.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section right-content" id="projects">
+                <div class="glass-card right 3d-card" style="max-width: 650px;">
+                    <span class="tag">05 / MASTERWORK</span>
+                    <h2>DEMOTRADER</h2>
+                    <p>A high-fidelity virtual stock trading application engineered for zero-risk market simulation (Paper Trading). Built entirely on Flutter with a seamlessly integrated Firebase backend for real-time data flow and user authentication.</p>
+                    <div class="tech-stack" style="margin-top: 25px; color: var(--neon); font-size: 0.85rem; letter-spacing: 2px; font-weight: 900;">
+                        FLUTTER | DART | FIREBASE AUTH | REAL-TIME DB
+                    </div>
+                    <button class="cta-btn magnetic" style="margin-top: 35px;">ACCESS REPOSITORY</button>
                 </div>
             </section>
 
             <section class="section center-content">
                 <div class="status-grid">
-                    <div class="status-item"><span>RENDER</span><strong>STABLE</strong></div>
-                    <div class="status-item"><span>UPTIME</span><strong>99.9%</strong></div>
-                    <div class="status-item"><span>SYNC</span><strong>ACTIVE</strong></div>
+                    <div class="status-item fade-up"><span>SKILLS</span><strong class="reveal-text">ACTIVE</strong></div>
+                    <div class="status-item fade-up"><span>UPTIME</span><strong class="reveal-text">20 YEARS</strong></div>
+                    <div class="status-item fade-up"><span>LOCATION</span><strong class="reveal-text">AHMEDABAD</strong></div>
                 </div>
             </section>
 
             <footer class="cyber-footer" id="footer">
                 <div class="footer-content">
                     <div class="footer-col brand-col">
-                        <h2 class="footer-logo">UNDOLIGHT</h2>
-                        <p>Transcend the ordinary. Join the system.</p>
+                        <h2 class="footer-logo reveal-text">UNDOLIGHT</h2>
+                        <p class="fade-up">Transcend the ordinary. Join the system.</p>
                     </div>
-                    <div class="footer-col links-col">
+                    <div class="footer-col links-col fade-up">
                         <h3>RESOURCES</h3>
-                        <ul><li><a href="#">SYSTEM STATUS</a></li><li><a href="#">COMMUNITY</a></li></ul>
+                        <ul>
+                            <li><a href="#" class="magnetic">RESUME</a></li>
+                            <li><a href="#" class="magnetic">GITHUB ARCHIVE</a></li>
+                        </ul>
                     </div>
-                    <div class="footer-col">
+                    <div class="footer-col fade-up">
                         <div class="social-icons">
-                            <a href="#" class="social-btn"><i class="fab fa-youtube"></i></a>
-                            <a href="#" class="social-btn"><i class="fab fa-discord"></i></a>
-                            <a href="#" class="social-btn"><i class="fab fa-instagram"></i></a>
+                            <a href="#" class="social-btn magnetic"><i class="fab fa-youtube"></i></a>
+                            <a href="#" class="social-btn magnetic"><i class="fab fa-github"></i></a>
+                            <a href="#" class="social-btn magnetic"><i class="fab fa-instagram"></i></a>
                         </div>
                     </div>
                 </div>
-                <div class="footer-bottom"><p>&copy; 2026 UNDOLIGHT PROJECT.</p></div>
+                <div class="footer-bottom"><p class="fade-up">&copy; 2026 PRASHANT | UNDOLIGHT PROJECT.</p></div>
             </footer>
         </div>
     </main>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-    <script type="importmap">{ "imports": { "three": "https://unpkg.com/three@0.160.0/build/three.module.js", "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/" } }</script>
+    <script type="importmap">
+    { 
+        "imports": { 
+            "three": "https://unpkg.com/three@0.160.0/build/three.module.js", 
+            "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/",
+            "cannon-es": "https://cdn.jsdelivr.net/npm/cannon-es@0.20.0/+esm"
+        } 
+    }
+    </script>
     <script type="module" src="main.js"></script>
 </body>
 </html>
