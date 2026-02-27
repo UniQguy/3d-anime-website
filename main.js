@@ -7,12 +7,26 @@ import { ShaderPass } from 'three/addons/postprocessing/ShaderPass.js';
 import * as CANNON from 'cannon-es';
 
 // ==========================================
-// 00. SYNTHESIZED AUDIO ENGINE
+// 00. BULLETPROOF AUDIO ENGINE (Crash Prevention)
 // ==========================================
-const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+let audioCtx;
+
+function initAudio() {
+    if (!audioCtx) {
+        try {
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        } catch (e) {
+            console.warn("Web Audio API not supported or blocked.");
+        }
+    }
+    if (audioCtx && audioCtx.state === 'suspended') {
+        audioCtx.resume();
+    }
+}
 
 function playUIChirp() {
-    if(audioCtx.state === 'suspended') audioCtx.resume();
+    initAudio();
+    if (!audioCtx) return;
     const osc = audioCtx.createOscillator();
     const gainNode = audioCtx.createGain();
     osc.type = 'sine';
@@ -25,7 +39,8 @@ function playUIChirp() {
 }
 
 function playBassDrop() {
-    if(audioCtx.state === 'suspended') audioCtx.resume();
+    initAudio();
+    if (!audioCtx) return;
     const osc = audioCtx.createOscillator();
     const gainNode = audioCtx.createGain();
     osc.type = 'sawtooth';
@@ -38,7 +53,8 @@ function playBassDrop() {
 }
 
 function playTypewriter() {
-    if(audioCtx.state === 'suspended') audioCtx.resume();
+    initAudio();
+    if (!audioCtx) return;
     const osc = audioCtx.createOscillator();
     const gainNode = audioCtx.createGain();
     osc.type = 'square';
@@ -54,6 +70,9 @@ function playTypewriter() {
 // ==========================================
 function wrapText() {
     document.querySelectorAll('.reveal-text').forEach(el => {
+        // Skip elements that already have complex inner HTML (like our split title)
+        if(el.querySelector('.text-outline')) return; 
+        
         const text = el.innerText;
         el.innerHTML = '';
         const words = text.split('\n').join(' <br> ').split(' '); 
@@ -66,7 +85,46 @@ function wrapText() {
 wrapText();
 
 // ==========================================
-// 02. CYBER-TERMINAL EASTER EGG (TYPE "VOID")
+// 02. INTERACTIVE RECAPTCHA LOADER
+// ==========================================
+const captchaBtn = document.getElementById('captcha-btn');
+const fetchText = document.getElementById('fetch-text');
+const loader = document.getElementById('loader');
+
+let isVerified = false;
+
+if(captchaBtn) {
+    captchaBtn.addEventListener('click', () => {
+        if(isVerified) return;
+        isVerified = true;
+        
+        // 1. Play interaction sound
+        playUIChirp();
+        
+        // 2. Visual Success Feedback on the panel
+        if(fetchText) {
+            fetchText.innerText = "VERIFIED. INITIALIZING VOID ARCHITECTURE...";
+            fetchText.style.color = "#0f9d58"; // Google Green
+        }
+        captchaBtn.style.borderColor = "#0f9d58";
+        captchaBtn.style.boxShadow = "0 30px 60px rgba(0,0,0,0.9), 0 0 40px rgba(15, 157, 88, 0.4)";
+        
+        // 3. Wait 1 second for cinematic suspense, then drop into the site
+        setTimeout(() => {
+            playBassDrop();
+            const tl = gsap.timeline();
+            tl.to(loader, { y: '-100%', duration: 1.5, ease: 'power4.inOut' })
+              .to('.hero .word-wrapper', { y: '0%', duration: 1.2, ease: 'power4.out', stagger: 0.05 }, "-=0.5")
+              .to('.hero .fade-up', { opacity: 1, y: 0, duration: 1, ease: 'power3.out', stagger: 0.1 }, "-=1")
+              // Animate the main title & HUD in smoothly
+              .fromTo('.main-title', { opacity: 0, y: 50 }, { opacity: 1, y: 0, duration: 1.5, ease: 'power3.out' }, "-=1.2")
+              .fromTo('.hud-panel', { opacity: 0, x: 50 }, { opacity: 1, x: 0, duration: 1.5, ease: 'power3.out' }, "-=1.2");
+        }, 1000); 
+    });
+}
+
+// ==========================================
+// 03. CYBER-TERMINAL EASTER EGG (TYPE "VOID")
 // ==========================================
 let keyBuffer = [];
 const terminalOverlay = document.getElementById('terminal-overlay');
@@ -107,7 +165,7 @@ function triggerTerminal() {
     playBassDrop();
     terminalOverlay.style.display = 'flex';
     gsap.fromTo(terminalOverlay, { opacity: 0, scale: 1.1 }, { opacity: 1, scale: 1, duration: 0.5, ease: "power4.out" });
-    gsap.to('#webgl-canvas', { opacity: 0.1, duration: 0.2, yoyo: true, repeat: 5 });
+    gsap.to('#webgl-canvas', { opacity: 0.1, duration: 0.2, yoyo: true, repeat: 5 }); // Glitch canvas
 
     terminalText.innerHTML = '';
     let i = 0;
@@ -126,12 +184,12 @@ closeTerminal.addEventListener('click', () => {
     gsap.to(terminalOverlay, { opacity: 0, scale: 0.9, duration: 0.5, ease: "power2.in", onComplete: () => {
         terminalOverlay.style.display = 'none';
         terminalText.innerHTML = '';
-        gsap.to('#webgl-canvas', { opacity: 1, duration: 0.5 }); // Restore canvas
+        gsap.to('#webgl-canvas', { opacity: 1, duration: 0.5 }); 
     }});
 });
 
 // ==========================================
-// 03. LOTTIE CAT & EXECUTIVE SUMMARY MODAL
+// 04. GHIBLI CAT & EXECUTIVE SUMMARY MODAL
 // ==========================================
 const catTrigger = document.getElementById('cat-trigger');
 const summaryOverlay = document.getElementById('summary-overlay');
@@ -142,13 +200,11 @@ if(catTrigger) {
         playUIChirp();
         summaryOverlay.style.display = 'flex';
         
-        // Blur background
         gsap.fromTo(summaryOverlay, 
             { opacity: 0, backdropFilter: "blur(0px)" }, 
-            { opacity: 1, backdropFilter: "blur(15px)", duration: 0.4, ease: "power2.out" }
+            { opacity: 1, backdropFilter: "blur(20px)", duration: 0.4, ease: "power2.out" }
         );
         
-        // Spring physics pop-in for the card
         gsap.fromTo('.summary-card', 
             { y: 100, scale: 0.8, opacity: 0, rotationX: 10 }, 
             { y: 0, scale: 1, opacity: 1, rotationX: 0, duration: 0.7, ease: "back.out(1.5)", delay: 0.1 }
@@ -167,20 +223,21 @@ if(closeSummary) {
 }
 
 // ==========================================
-// 04. THREE.JS INIT & POST-PROCESSING 
+// 05. THREE.JS INIT & POST-PROCESSING 
 // ==========================================
 const scene = new THREE.Scene();
 scene.fog = new THREE.FogExp2(0x030303, 0.04); 
 
 const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
-const renderer = new THREE.WebGLRenderer({ canvas: document.querySelector('#webgl-canvas'), alpha: true, antialias: false });
+// HARDWARE ACCELERATION
+const renderer = new THREE.WebGLRenderer({ canvas: document.querySelector('#webgl-canvas'), alpha: true, antialias: false, powerPreference: "high-performance" });
 renderer.setSize(window.innerWidth, window.innerHeight);
-renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); // Cap pixel ratio for performance
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); 
 
 const renderScene = new RenderPass(scene, camera);
 const bloomPass = new UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), 1.5, 0.4, 0.85);
 bloomPass.threshold = 0.1; 
-bloomPass.strength = 1.6; // Initial strong cinematic bloom
+bloomPass.strength = 1.6; // High bloom for glowing white Hat section
 bloomPass.radius = 0.8;
 
 const FluidShader = {
@@ -203,7 +260,7 @@ composer.addPass(bloomPass);
 composer.addPass(ripplePass); 
 
 // ==========================================
-// 05. CUSTOM GLSL FLUID PARTICLES (The Void)
+// 06. CUSTOM GLSL FLUID PARTICLES
 // ==========================================
 const particleShaderMaterial = new THREE.ShaderMaterial({
     uniforms: { uTime: { value: 0.0 } },
@@ -228,7 +285,7 @@ const particleMesh = new THREE.Points(particlesGeometry, particleShaderMaterial)
 scene.add(particleMesh);
 
 // ==========================================
-// 06. CANNON.JS PHYSICS PLAYGROUND
+// 07. CANNON.JS PHYSICS PLAYGROUND
 // ==========================================
 const world = new CANNON.World({ gravity: new CANNON.Vec3(0, -9.82, 0) });
 const physicsMeshes = []; const physicsBodies = [];
@@ -248,10 +305,9 @@ for(let i=0; i<4; i++) {
 }
 
 // ==========================================
-// 07. PERFORMANCE OPTIMIZED INTERACTIONS
+// 08. PERFORMANCE OPTIMIZED INTERACTIONS
 // ==========================================
 let mouse = { x: 0, y: 0 }; let lastMouse = { x: 0, y: 0 }; let mouseVelocity = 0;
-let cursorTarget = { x: window.innerWidth/2, y: window.innerHeight/2, scale: 1 };
 const raycaster = new THREE.Raycaster();
 
 window.addEventListener('mousemove', (e) => {
@@ -263,71 +319,28 @@ window.addEventListener('mousemove', (e) => {
     lastMouse.x = mouse.x; lastMouse.y = mouse.y;
 
     FluidShader.uniforms.uMouse.value.set(mouse.x, mouse.y);
-    
-    if(!document.querySelector('.magnetic:hover') && !document.querySelector('button:hover')) {
-        cursorTarget.x = e.clientX; cursorTarget.y = e.clientY; cursorTarget.scale = 1;
-    }
 });
 
-// Magnetic UI Links
+// Magnetic Buttons
 document.querySelectorAll('.magnetic').forEach(el => {
     el.addEventListener('mousemove', (e) => {
         const rect = el.getBoundingClientRect(); const centerX = rect.left + rect.width / 2; const centerY = rect.top + rect.height / 2;
         gsap.to(el, { x: (e.clientX - centerX) * 0.3, y: (e.clientY - centerY) * 0.3, duration: 0.4, ease: "power2.out" });
-        cursorTarget.x = centerX + (e.clientX - centerX) * 0.1; cursorTarget.y = centerY + (e.clientY - centerY) * 0.1; cursorTarget.scale = 3;
     });
     el.addEventListener('mouseenter', () => playUIChirp());
     el.addEventListener('mouseleave', () => gsap.to(el, { x: 0, y: 0, duration: 0.7, ease: "elastic.out(1, 0.3)" }));
 });
 
-// Smooth Cursor & Velocity Ticker
+// Smooth Velocity Decay
 gsap.ticker.add(() => {
-    gsap.set('.cursor', { 
-        x: gsap.utils.interpolate(gsap.getProperty('.cursor', 'x'), cursorTarget.x, 0.15),
-        y: gsap.utils.interpolate(gsap.getProperty('.cursor', 'y'), cursorTarget.y, 0.15),
-        scale: gsap.utils.interpolate(gsap.getProperty('.cursor', 'scale'), cursorTarget.scale, 0.15)
-    });
     mouseVelocity = gsap.utils.interpolate(mouseVelocity, 0, 0.05); 
     FluidShader.uniforms.uVelocity.value = mouseVelocity;
 });
 
 // ==========================================
-// 08. INITIAL LOADER
+// 09. 3D ASSET, LIGHTING & SCROLL TIMELINES
 // ==========================================
 const loadManager = new THREE.LoadingManager();
-loadManager.onProgress = (url, loaded, total) => { document.querySelector('.progress-fill').style.width = (loaded / total * 100) + '%'; };
-loadManager.onLoad = () => { 
-    gsap.to('.progress-bar', { opacity: 0, duration: 0.5 }); 
-    gsap.to('#loader .word-wrapper', { y: '0%', duration: 1, ease: 'power4.out', stagger: 0.1 });
-    setTimeout(() => { document.querySelector('#enter-btn').style.display = 'block'; }, 1000);
-};
-
-document.querySelector('#enter-btn').addEventListener('click', () => {
-    if(audioCtx.state === 'suspended') audioCtx.resume();
-    playBassDrop(); // Epic start
-    gsap.timeline()
-      .to('#loader', { y: '-100%', duration: 1.5, ease: 'expo.inOut' })
-      .to('.hero .word-wrapper', { y: '0%', duration: 1.2, ease: 'power4.out', stagger: 0.05 }, "-=0.5")
-      .to('.hero .fade-up', { opacity: 1, y: 0, duration: 1, ease: 'power3.out', stagger: 0.1 }, "-=1");
-});
-
-// ==========================================
-// 09. DEMOTRADER HOLOGRAPHIC NODES
-// ==========================================
-const dataNodeGroup = new THREE.Group();
-const nodeMat = new THREE.MeshBasicMaterial({ color: 0xff6600, wireframe: true, transparent: true, opacity: 0.8 });
-const nodes = [];
-for(let i = 0; i < 12; i++) {
-    const mesh = new THREE.Mesh(new THREE.SphereGeometry(0.08, 16, 16), nodeMat);
-    mesh.position.set((Math.random() - 0.5) * 4, (Math.random() - 0.5) * 4, (Math.random() - 0.5) * 4);
-    dataNodeGroup.add(mesh); nodes.push(mesh.position);
-}
-dataNodeGroup.add(new THREE.LineLoop(new THREE.BufferGeometry().setFromPoints(nodes), new THREE.LineBasicMaterial({ color: 0xff6600, transparent: true, opacity: 0.3 })));
-dataNodeGroup.scale.set(0, 0, 0); scene.add(dataNodeGroup);
-
-// ==========================================
-// 10. 3D ASSET & FIXED LIGHTING TIMELINES
-// ==========================================
 const loader = new GLTFLoader(loadManager);
 let model, wireframeModel;
 const materialState = { wireframeMix: 0 }; 
@@ -342,48 +355,63 @@ function updateMaterials() {
     wireframeModel.traverse(c => { if(c.isMesh) c.material.opacity = materialState.wireframeMix; });
 }
 
+// When the 3D model finishes loading, update the text to tell the user it's ready
+loadManager.onLoad = () => {
+    if(fetchText && !isVerified) {
+        fetchText.innerText = "SYSTEM SECURED. CLICK TO ENTER.";
+        fetchText.style.color = "#ff6600";
+    }
+};
+
 loader.load('luffy_hat/scene.gltf', (gltf) => {
     model = gltf.scene; 
-    model.scale.set(1.1, 1.1, 1.1); // Perfect initial hero scale
+    model.scale.set(1.1, 1.1, 1.1); 
     
     wireframeModel = model.clone();
     wireframeModel.traverse((child) => { if (child.isMesh) child.material = new THREE.MeshBasicMaterial({ color: 0xff6600, wireframe: true, transparent: true, opacity: 0 }); });
     scene.add(model); scene.add(wireframeModel);
     
     gsap.registerPlugin(ScrollTrigger);
+
+    // --- DYNAMIC HUD COLOR TRIGGER ---
+    ScrollTrigger.create({
+        trigger: "#about",
+        start: "top 50%", 
+        onEnter: () => {
+            const hud = document.getElementById('dynamic-hud');
+            if(hud) hud.classList.add('scrolled');
+        },
+        onLeaveBack: () => {
+            const hud = document.getElementById('dynamic-hud');
+            if(hud) hud.classList.remove('scrolled');
+        }
+    });
+
+    // --- MASTER 3D SCROLL TIMELINE ---
     const tl = gsap.timeline({ scrollTrigger: { trigger: "body", start: "top top", end: "bottom bottom", scrub: 1 }});
 
-    // CH 1: IDENTITY (Shift slightly left for layout)
     tl.to(model.position, { x: -2.2, y: 0.2, z: -1, duration: 1.5 })
       .to(model.rotation, { y: Math.PI, z: 0.1, duration: 1.5 }, "<")
       .to(materialState, { wireframeMix: 1, duration: 1.5, onUpdate: updateMaterials }, "<")
     
-    // CH 2: ARSENAL (Drop the Physics blocks)
       .to(model.position, { x: 0, y: 0.8, z: -1.5, duration: 1.5 })
       .to(model.rotation, { y: Math.PI * 1.5, x: 0.2, duration: 1.5 }, "<")
       .to(model.scale, { x: 1.3, y: 1.3, z: 1.3, duration: 1.5 }, "<")
       .call(() => { physicsBodies.forEach((b, i) => { b.position.set((Math.random()-0.5)*2, 5 + i*1.5, -1.5); b.velocity.set(0,0,0); }); })
     
-    // CH 3: EVOLUTION 
       .to(model.position, { x: 2.2, y: 0.5, z: -1, duration: 1.5 })
       .to(model.rotation, { y: Math.PI * 2, x: -0.1, duration: 1.5 }, "<")
       .to(model.scale, { x: 1.1, y: 1.1, z: 1.1, duration: 1.5 }, "<")
       .to(materialState, { wireframeMix: 0, duration: 1.5, onUpdate: updateMaterials }, "<")
-
-    // CH 4: PROJECTS (Swap to Holographic Nodes)
-      .to(model.scale, { x: 0, y: 0, z: 0, duration: 0.5 }, "-=0.2") 
-      .to(dataNodeGroup.scale, { x: 1.2, y: 1.2, z: 1.2, duration: 1.5 }, "<") 
-      .to(dataNodeGroup.position, { x: -2.5, y: 0, z: 0.5, duration: 1.5 }, "<")
     
-    // CH 5: STATUS & FOOTER (THE LIGHTING FIX & FRAMING)
-      .to(dataNodeGroup.scale, { x: 0, y: 0, z: 0, duration: 0.5 }, "-=0.2") 
-      .to(model.position, { x: 0, y: 0, z: -1.5, duration: 1.5 }, "<") // Frame perfectly in center, pushed back
-      .to(model.rotation, { x: 0.5, y: Math.PI * 2.5, duration: 1.5 }, "<") // Tilted down respectfully
+      // Tame the Bloom & Light at the end to beautifully reveal the hat
+      .to(model.position, { x: 0, y: 0, z: -1.5, duration: 1.5 }) 
+      .to(model.rotation, { x: 0.5, y: Math.PI * 2.5, duration: 1.5 }, "<") 
       .to(model.scale, { x: 1.0, y: 1.0, z: 1.0, duration: 1.5 }, "<")
-      .to(bloomPass, { strength: 0.35, duration: 1.5 }, "<") // Tame the glowing bloom at the end
-      .to(pLight, { intensity: 15, duration: 1.5 }, "<"); // Dim the point light so it doesn't wash out the hat
+      .to(bloomPass, { strength: 0.35, duration: 1.5 }, "<") 
+      .to(pLight, { intensity: 15, duration: 1.5 }, "<"); 
 
-    // Hardware-accelerated Card Animations
+    // --- HTML CARDS 3D IN/OUT ANIMATIONS ---
     document.querySelectorAll('.3d-card').forEach(card => {
         gsap.set(card, { rotationX: 60, y: 150, opacity: 0, transformOrigin: "center center" });
         const cardTl = gsap.timeline({ scrollTrigger: { trigger: card, start: "top 90%", end: "bottom 10%", scrub: 1 }});
@@ -404,7 +432,7 @@ loader.load('luffy_hat/scene.gltf', (gltf) => {
 });
 
 // ==========================================
-// 11. CORE ANIMATION LOOP
+// 10. CORE ANIMATION LOOP (LAG FREE)
 // ==========================================
 const clock = new THREE.Clock();
 
@@ -423,25 +451,23 @@ function animate() {
         physicsMeshes[i].quaternion.copy(physicsBodies[i].quaternion);
     }
 
-    // Raycaster Intersection inside RequestAnimationFrame (Lag Fix)
-    raycaster.setFromCamera(mouse, camera);
-    const intersects = raycaster.intersectObjects(physicsMeshes);
-    if(intersects.length > 0 && mouseVelocity > 0.5) {
-        const index = physicsMeshes.indexOf(intersects[0].object);
-        if(index > -1) {
-            // Push blocks away
-            physicsBodies[index].velocity.set(mouse.x * 5, 4, mouse.y * 5);
-            physicsBodies[index].angularVelocity.set(Math.random()*5, Math.random()*5, 0);
+    // Performance Lock: Raycaster ONLY fires if mouse is actively moving fast enough
+    if (mouseVelocity > 0.5) {
+        raycaster.setFromCamera(mouse, camera);
+        const intersects = raycaster.intersectObjects(physicsMeshes);
+        if(intersects.length > 0) {
+            const index = physicsMeshes.indexOf(intersects[0].object);
+            if(index > -1) {
+                // Apply physics force
+                physicsBodies[index].velocity.set(mouse.x * 5, 4, mouse.y * 5);
+                physicsBodies[index].angularVelocity.set(Math.random()*5, Math.random()*5, 0);
+            }
         }
     }
 
     if(model) {
         model.rotation.y += 0.0015; model.position.y += Math.sin(elapsedTime * 1.5) * 0.0003; 
         wireframeModel.rotation.copy(model.rotation); wireframeModel.position.copy(model.position); wireframeModel.scale.copy(model.scale);
-    }
-
-    if(dataNodeGroup.scale.x > 0) {
-        dataNodeGroup.rotation.y -= 0.002; dataNodeGroup.rotation.x += 0.001;
     }
 
     // Background parallax

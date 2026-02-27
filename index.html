@@ -6,21 +6,27 @@
     <title>PRASHANT | 3D Creative Engineer</title>
     <link rel="stylesheet" href="index.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=Inter:wght@300;400;700;900&family=VT323&display=swap" rel="stylesheet">
-    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=Inter:wght@300;400;500;700;900&family=VT323&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js" defer></script>
 </head>
 <body>
 
     <div id="loader">
-        <div class="loader-content">
-            <h2 class="loader-text reveal-text">SYNCING PORTFOLIO_CORE</h2>
-            <div class="progress-bar"><div class="progress-fill"></div></div>
-            <div class="loader-details fade-up">ASSETS: SECURED // PHYSICS: ONLINE</div>
-            <button id="enter-btn" class="magnetic" style="display:none;">INITIALIZE SYSTEM</button>
+        <div class="captcha-panel">
+            <div class="captcha-header">SYSTEM VERIFICATION</div>
+            
+            <div class="ufo-hero-wrapper magnetic" id="captcha-btn" title="Click to Verify">
+                <lottie-player id="ufo-lottie" src="Free Interactive Recaptcha UFO.json" background="transparent" speed="1" loop autoplay></lottie-player>
+            </div>
+
+            <div class="loader-details" id="fetch-text">CLICK THE UFO TO VERIFY</div>
         </div>
     </div>
 
     <div id="terminal-overlay">
+        <div class="terminal-bg-gear">
+            <lottie-player src="Background looping animation.json" background="transparent" speed="0.5" loop autoplay></lottie-player>
+        </div>
         <div class="crt-scanlines"></div>
         <div class="terminal-content">
             <div class="terminal-header">
@@ -59,14 +65,16 @@
             </p>
         </div>
     </div>
-
-    <div class="cursor"></div>
     
     <div class="bg-text-container">
         <h1 class="bg-text" data-speed="0.8">UNDOLIGHT</h1>
     </div>
 
     <canvas id="webgl-canvas"></canvas>
+
+    <div class="deep-web-bg">
+        <lottie-player src="Underwater Ocean Fish and Turtle.json" background="transparent" speed="0.5" loop autoplay></lottie-player>
+    </div>
 
     <nav class="video-navbar">
         <div class="nav-video-bg">
@@ -96,7 +104,10 @@
                     <div class="hero-left">
                         <div class="hero-card">
                             <p class="protocol fade-up">DEVELOPER PROTOCOL // 001</p>
-                            <h1 class="main-title reveal-text">CREATIVE<br>ENGINEER</h1>
+                            <h1 class="main-title reveal-text">
+                                <span class="text-outline">CREATIVE</span><br>
+                                <span class="text-solid">ENGINEER</span>
+                            </h1>
                             <div class="hero-line fade-up"></div>
                             <p class="fade-up sys-hint">TYPE [ V O I D ] TO OVERRIDE SYSTEM</p>
                         </div>
@@ -105,7 +116,7 @@
                     <div class="hero-center"></div>
 
                     <div class="hero-right">
-                        <div class="hud-panel fade-up">
+                        <div class="hud-panel fade-up" id="dynamic-hud">
                             <div class="hud-item">
                                 <span class="hud-label">SYSTEM STATUS</span>
                                 <span class="hud-value blink">OPTIMAL</span>
@@ -119,10 +130,7 @@
                                 <span class="hud-value">23.0225° N, 72.5714° E</span>
                             </div>
                             <div class="hud-decoration">
-                                <svg width="50" height="50" viewBox="0 0 100 100">
-                                    <circle cx="50" cy="50" r="45" fill="none" stroke="#000" stroke-width="2" stroke-dasharray="15 10" class="spin-slow" />
-                                    <circle cx="50" cy="50" r="15" fill="#000" />
-                                </svg>
+                                <lottie-player src="simple ai pulse.json" background="transparent" speed="1" style="width: 80px; height: 80px;" id="hud-pulse" loop autoplay></lottie-player>
                             </div>
                         </div>
                     </div>
@@ -132,11 +140,9 @@
 
             <section class="section side-content" id="about">
                 <div class="glass-card 3d-card" style="position: relative;">
-                    
                     <div id="cat-trigger" class="magnetic" title="Click to view Executive Summary">
                         <lottie-player src="ghibli.json" background="transparent" speed="1" loop autoplay></lottie-player>
                     </div>
-
                     <span class="tag">02 / IDENTITY</span>
                     <h2>PRASHANT</h2>
                     <p>Bridging the gap between high-end aesthetic interfaces and robust backend logic. Code is the canvas; physics is the paint.</p>
@@ -176,7 +182,6 @@
                 <div class="timeline-container">
                     <span class="tag fade-up">04 / THE JOURNEY</span>
                     <h2 class="reveal-text" style="font-size: 3.5rem; margin-bottom: 50px;">EVOLUTION</h2>
-                    
                     <div class="timeline">
                         <div class="timeline-item">
                             <div class="timeline-dot"></div>
@@ -186,7 +191,6 @@
                                 <p>Successfully completed BCA, laying the groundwork in structured object-oriented analysis, logic, and core computing principles.</p>
                             </div>
                         </div>
-                        
                         <div class="timeline-item">
                             <div class="timeline-dot"></div>
                             <div class="timeline-content glass-card 3d-card">
@@ -195,7 +199,6 @@
                                 <p>Founded the 'undolight' YouTube channel. Merging deep dives into Manhwa/Anime with high-end DaVinci Resolve motion edits.</p>
                             </div>
                         </div>
-
                         <div class="timeline-item">
                             <div class="timeline-dot"></div>
                             <div class="timeline-content glass-card 3d-card">
@@ -229,25 +232,26 @@
             </section>
 
             <footer class="cyber-footer" id="footer">
-                <div class="footer-content">
-                    <div class="footer-col brand-col">
+                <div class="footer-dynamic-island">
+                    
+                    <div class="footer-element speaker-zone">
+                        <lottie-player src="Loudspeaker.json" background="transparent" speed="1" loop autoplay></lottie-player>
+                    </div>
+
+                    <div class="footer-element brand-zone">
                         <h2 class="footer-logo reveal-text">UNDOLIGHT</h2>
-                        <p class="fade-up">Transcend the ordinary. Join the system.</p>
-                    </div>
-                    <div class="footer-col links-col fade-up">
-                        <h3>RESOURCES</h3>
-                        <ul>
-                            <li><a href="#" class="magnetic">RESUME</a></li>
-                            <li><a href="#" class="magnetic">GITHUB ARCHIVE</a></li>
-                        </ul>
-                    </div>
-                    <div class="footer-col fade-up">
-                        <div class="social-icons">
+                        <p class="fade-up" style="margin-bottom: 20px;">Transcend the ordinary. Join the system.</p>
+                        <div class="social-icons fade-up">
                             <a href="#" class="social-btn magnetic"><i class="fab fa-youtube"></i></a>
                             <a href="#" class="social-btn magnetic"><i class="fab fa-github"></i></a>
                             <a href="#" class="social-btn magnetic"><i class="fab fa-instagram"></i></a>
                         </div>
                     </div>
+
+                    <div class="footer-element morty-zone">
+                        <lottie-player src="The Morty Dance Loader.json" background="transparent" speed="1" loop autoplay></lottie-player>
+                    </div>
+
                 </div>
                 <div class="footer-bottom"><p class="fade-up">&copy; 2026 PRASHANT | UNDOLIGHT PROJECT.</p></div>
             </footer>

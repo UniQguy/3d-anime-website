@@ -4,14 +4,14 @@
 :root { 
     --neon: #ff6600; 
     --bg: #030303; 
-    --glass: rgba(15, 15, 15, 0.4); 
+    --glass: rgba(15, 15, 15, 0.5); 
 }
 
 * { 
     margin: 0; 
     padding: 0; 
     box-sizing: border-box; 
-    cursor: none !important; 
+    /* NATIVE CURSOR RESTORED - Removed 'cursor: none' for perfect UX & zero lag */
 }
 
 body { 
@@ -28,7 +28,7 @@ body {
     overflow: hidden;
 }
 
-.section, .glass-card, .hero-card, .hud-panel {
+.section, .glass-card, .hero-card, .hud-panel, .captcha-panel {
     transform: translateZ(0); /* Hardware Acceleration */
     backface-visibility: hidden;
     -webkit-backface-visibility: hidden;
@@ -36,18 +36,8 @@ body {
 }
 
 /* ==========================================
-   01. CUSTOM CURSOR & CANVAS LAYER
+   01. 3D CANVAS & BACKGROUND BRANDING
 ========================================== */
-.cursor {
-    width: 14px; height: 14px; 
-    background: #fff; border-radius: 50%;
-    position: fixed; pointer-events: none; 
-    z-index: 1000000;
-    mix-blend-mode: difference;
-    transform: translate(-50%, -50%); 
-    will-change: transform, width, height;
-}
-
 #webgl-canvas { 
     position: fixed; inset: 0; 
     z-index: 5; pointer-events: none; 
@@ -67,77 +57,157 @@ body {
 }
 
 /* ==========================================
-   02. KINETIC TYPOGRAPHY UTILITIES
+   02. ELITE TYPOGRAPHY & UTILITIES
 ========================================== */
 .line-wrapper { overflow: hidden; display: block; }
 .word-wrapper { display: inline-block; transform: translateY(110%); transform-origin: top left; will-change: transform; }
 .fade-up { opacity: 0; transform: translateY(30px); will-change: transform, opacity; }
+
+/* Premium Outline Text Effect for "CREATIVE ENGINEER" */
+.main-title { 
+    font-size: 5.5rem; 
+    font-family: 'Inter', sans-serif;
+    margin-bottom: 20px; 
+    text-transform: uppercase; 
+    letter-spacing: -2px;
+}
+.text-outline {
+    color: transparent;
+    -webkit-text-stroke: 2px rgba(255, 255, 255, 0.9);
+    display: block;
+    line-height: 1.1;
+}
+.text-solid {
+    color: #fff;
+    font-weight: 900;
+    display: block;
+    line-height: 0.95;
+    text-shadow: 0 10px 30px rgba(0,0,0,0.8);
+}
 
 .section { 
     min-height: 100vh; display: flex; align-items: center; 
     padding: 100px 10%; position: relative; z-index: 10; 
     perspective: 1500px; 
 }
-
 .side-content { justify-content: flex-start; }
 .right-content { justify-content: flex-end; }
 .center-content { justify-content: center; flex-direction: column; }
 .text-center { text-align: center; }
 
 /* ==========================================
-   03. THE NEW HERO GRID & BLACK HUD
+   03. THE INTERACTIVE UFO LOADER
 ========================================== */
-.hero-layout-grid {
-    display: grid;
-    /* Left text (1 part) | Center Hat Space (1.5 parts) | Right HUD (1 part) */
-    grid-template-columns: 1fr 1.5fr 1fr; 
-    width: 100%;
-    align-items: center;
+#loader { 
+    position: fixed; inset: 0; background: #030303; 
+    z-index: 9999; display: flex; align-items: center; justify-content: center; 
 }
 
+/* The entire panel is now the clickable trigger */
+.captcha-panel {
+    background: rgba(10, 10, 10, 0.8);
+    backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 30px 60px rgba(0,0,0,0.9), inset 0 0 30px rgba(255,255,255,0.02);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    width: 90%; max-width: 400px;
+    cursor: pointer; 
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.captcha-panel:hover {
+    border-color: var(--neon);
+    box-shadow: 0 30px 60px rgba(0,0,0,0.9), 0 0 40px rgba(255, 102, 0, 0.3);
+    transform: translateY(-5px);
+}
+
+.captcha-header {
+    font-family: 'Syncopate', sans-serif; color: #888; font-size: 0.65rem; 
+    letter-spacing: 4px; margin-bottom: 25px; text-transform: uppercase;
+}
+
+/* Centered UFO Wrapper */
+.ufo-hero-wrapper {
+    width: 220px; height: 160px; 
+    margin: 0 auto 10px auto; 
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    /* CRITICAL FIX: Lets clicks pass through the animation to the panel */
+    pointer-events: none; 
+}
+.ufo-hero-wrapper lottie-player { 
+    width: 100%; height: 100%; 
+    filter: drop-shadow(0 15px 20px rgba(0,0,0,0.6)); 
+}
+
+/* Scales up on panel hover */
+.captcha-panel:hover .ufo-hero-wrapper {
+    transform: scale(1.15) translateY(-5px);
+}
+
+.loader-details { 
+    font-family: 'Syncopate', sans-serif; font-size: 0.55rem; color: #aaa; 
+    letter-spacing: 2px; text-align: center; transition: color 0.3s; margin-top: 10px;
+}
+
+/* ==========================================
+   04. THE HERO GRID & DYNAMIC HUD
+========================================== */
+.hero-layout-grid {
+    display: grid; grid-template-columns: 1fr 1.5fr 1fr; width: 100%; align-items: center;
+}
 .hero-left { z-index: 20; pointer-events: all; position: relative; }
 .hero-center { width: 100%; pointer-events: none; }
 .hero-right { z-index: 20; pointer-events: all; display: flex; justify-content: flex-end; }
 
 .protocol { font-family: 'Syncopate', sans-serif; font-size: 0.65rem; color: var(--neon); letter-spacing: 4px; margin-bottom: 20px; }
-.main-title { font-size: 5rem; font-weight: 900; line-height: 0.95; margin-bottom: 20px; text-transform: uppercase; text-shadow: 0 10px 30px rgba(0,0,0,0.8); }
 .hero-line { width: 50px; height: 3px; background: var(--neon); margin: 25px 0; }
 .sys-hint { font-size: 0.55rem; letter-spacing: 5px; color: #888; font-family: 'Syncopate', sans-serif; }
 
-/* High-Contrast Black HUD against the Bloom */
+/* The HUD Base State (Dark Grey/Black to contrast the White Bloom) */
 .hud-panel {
-    text-align: right;
-    border-right: 2px solid rgba(0, 0, 0, 0.8);
-    padding-right: 25px;
-    display: flex;
-    flex-direction: column;
-    gap: 35px;
-    /* Subtle white glow behind black text just in case bloom dims */
-    text-shadow: 0 0 10px rgba(255,255,255,0.5);
+    text-align: right; border-right: 2px solid rgba(0, 0, 0, 0.8); padding-right: 25px;
+    display: flex; flex-direction: column; gap: 35px; transition: all 0.6s ease;
 }
-
 .hud-item { display: flex; flex-direction: column; align-items: flex-end; }
-.hud-label { font-family: 'Syncopate', sans-serif; font-size: 0.55rem; color: #222; letter-spacing: 3px; margin-bottom: 5px; font-weight: 700; }
-.hud-value { font-family: 'Inter', sans-serif; font-weight: 900; font-size: 1.1rem; color: #000; letter-spacing: 1px; }
+.hud-label { font-family: 'Syncopate', sans-serif; font-size: 0.55rem; color: #444; letter-spacing: 3px; margin-bottom: 5px; font-weight: 700; transition: color 0.6s ease; }
+.hud-value { font-family: 'Inter', sans-serif; font-weight: 900; font-size: 1.1rem; color: #111; letter-spacing: 1px; text-shadow: 0 0 15px rgba(255,255,255,0.7); transition: all 0.6s ease; }
+#hud-pulse { filter: invert(1); transition: filter 0.6s ease; } 
 
-.blink { animation: blinkStatus 1.5s infinite; color: #000; }
+/* The HUD Scrolled State (Pure White for Dark Backgrounds) */
+.hud-panel.scrolled { border-right-color: var(--neon); }
+.hud-panel.scrolled .hud-label { color: #aaa; }
+.hud-panel.scrolled .hud-value { color: #fff; text-shadow: 0 0 15px rgba(255,102,0,0.5); }
+.hud-panel.scrolled #hud-pulse { filter: invert(0); } 
+
+.blink { animation: blinkStatus 1.5s infinite; }
 @keyframes blinkStatus { 0%, 100% { opacity: 1; } 50% { opacity: 0.2; } }
 
-.spin-slow { animation: spin 15s linear infinite; transform-origin: center; }
-@keyframes spin { 100% { transform: rotate(360deg); } }
+/* ==========================================
+   05. DECORATIVE LOTTIE ANIMATIONS
+========================================== */
+.deep-web-bg {
+    position: fixed; bottom: 0; left: 0; width: 100vw; height: 100vh;
+    z-index: 1; opacity: 0.1; mix-blend-mode: screen; pointer-events: none; 
+}
+.deep-web-bg lottie-player { width: 100%; height: 100%; object-fit: cover; }
+
+.arsenal-lottie-bg {
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    width: 150vw; height: 150vh; z-index: -1; opacity: 0.15; pointer-events: none;
+}
+.arsenal-lottie-bg lottie-player { width: 100%; height: 100%; }
 
 /* ==========================================
-   04. GLASS CARDS & UI ELEMENTS
+   06. GLASS CARDS & UI ELEMENTS
 ========================================== */
 .glass-card {
     background: var(--glass); 
     backdrop-filter: blur(25px) saturate(180%); -webkit-backdrop-filter: blur(25px) saturate(180%);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    border-left: 2px solid rgba(255, 102, 0, 0.8); 
-    padding: 60px; border-radius: 6px; max-width: 550px;
-    pointer-events: all;
-    box-shadow: 0 20px 50px rgba(0,0,0,0.6);
-    transform-style: preserve-3d;
+    border: 1px solid rgba(255, 255, 255, 0.05); border-left: 2px solid rgba(255, 102, 0, 0.8); 
+    padding: 60px; border-radius: 6px; max-width: 550px; pointer-events: all;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.6); transform-style: preserve-3d;
 }
 
 .tag { font-family: 'Syncopate', sans-serif; font-size: 0.6rem; color: var(--neon); letter-spacing: 4px; display: block; margin-bottom: 20px; text-shadow: 0 0 10px rgba(255,102,0,0.3); }
@@ -145,101 +215,71 @@ body {
 .glass-card p { line-height: 1.6; color: #b0b0b0; font-size: 0.95rem; }
 
 /* ==========================================
-   05. GHIBLI LOTTIE TRIGGER & SUMMARY MODAL
+   07. GHIBLI TRIGGER & SUMMARY MODAL
 ========================================== */
 #cat-trigger {
-    position: absolute;
-    top: -100px;
-    right: -30px;
-    z-index: 50;
+    position: absolute; top: -90px; right: -20px; z-index: 50; cursor: pointer;
     transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    animation: nativeFloat 4s ease-in-out infinite; /* Continuous gentle float */
+    animation: nativeFloat 4s ease-in-out infinite; 
 }
-
-@keyframes nativeFloat {
-    0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-15px); }
-}
-
-#cat-trigger:hover {
-    animation-play-state: paused; /* Pause float on hover */
-    transform: scale(1.15) rotate(5deg) translateY(-5px);
-    filter: drop-shadow(0 15px 15px rgba(255, 102, 0, 0.4));
-}
-lottie-player {
-    width: 180px;
-    height: 180px;
-}
+@keyframes nativeFloat { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-15px); } }
+#cat-trigger:hover { animation-play-state: paused; transform: scale(1.15) rotate(5deg) translateY(-5px); filter: drop-shadow(0 15px 15px rgba(255, 102, 0, 0.4)); }
+#cat-trigger lottie-player { width: 170px; height: 170px; }
 
 #summary-overlay {
-    position: fixed; inset: 0; z-index: 100000;
-    background: rgba(5, 5, 5, 0.7);
-    backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-    display: none; align-items: center; justify-content: center;
-    pointer-events: all;
+    position: fixed; inset: 0; z-index: 100000; background: rgba(5, 5, 5, 0.8);
+    backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); display: none; align-items: center; justify-content: center; pointer-events: all;
 }
-
 .summary-card {
-    background: rgba(10, 10, 10, 0.95);
-    border: 1px solid rgba(255, 102, 0, 0.2); border-top: 3px solid var(--neon);
-    width: 90%; max-width: 650px; padding: 60px; border-radius: 8px;
-    box-shadow: 0 40px 80px rgba(0,0,0,0.9), inset 0 0 40px rgba(255,102,0,0.05);
-    position: relative; text-align: left;
+    background: rgba(10, 10, 10, 0.95); border: 1px solid rgba(255, 102, 0, 0.2); border-top: 3px solid var(--neon);
+    width: 90%; max-width: 650px; padding: 60px; border-radius: 8px; box-shadow: 0 40px 80px rgba(0,0,0,0.9), inset 0 0 40px rgba(255,102,0,0.05); position: relative; text-align: left;
 }
-
-#close-summary {
-    position: absolute; top: 25px; right: 30px;
-    background: transparent; border: none; color: #555;
-    font-size: 1.5rem; transition: 0.3s;
-}
+#close-summary { position: absolute; top: 25px; right: 30px; background: transparent; border: none; color: #555; font-size: 1.5rem; transition: 0.3s; cursor: pointer; }
 #close-summary:hover { color: var(--neon); transform: rotate(90deg) scale(1.1); }
-
-.summary-stats {
-    display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px;
-    margin-bottom: 25px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 25px;
-}
+.summary-stats { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; margin-bottom: 25px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 25px; }
 .stat-box { display: flex; flex-direction: column; }
 .stat-label { font-family: 'Syncopate', sans-serif; font-size: 0.5rem; color: #777; letter-spacing: 2px; margin-bottom: 8px; }
 .stat-value { font-weight: 900; font-size: 1.1rem; color: #fff; }
-.neon-text { color: var(--neon); text-shadow: 0 0 15px rgba(255,102,0,0.4); }
 .summary-desc { font-size: 1.05rem; color: #aaa; line-height: 1.8; }
 
 /* ==========================================
-   06. TERMINAL EASTER EGG (TYPE "VOID")
+   08. TERMINAL EASTER EGG (GEAR INTEGRATED)
 ========================================== */
 #terminal-overlay {
-    position: fixed; inset: 0; z-index: 100000;
-    background: rgba(2, 2, 2, 0.98);
+    position: fixed; inset: 0; z-index: 100000; background: rgba(2, 2, 2, 0.98);
     display: none; flex-direction: column; justify-content: center; align-items: center;
-    font-family: 'VT323', monospace; color: #0f0; text-shadow: 0 0 8px rgba(0,255,0,0.6);
-    pointer-events: all;
+    font-family: 'VT323', monospace; color: #0f0; text-shadow: 0 0 8px rgba(0,255,0,0.6); pointer-events: all; overflow: hidden;
 }
+.terminal-bg-gear {
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    width: 80vw; height: 80vh; opacity: 0.04; pointer-events: none; z-index: 1; filter: grayscale(100%) sepia(100%) hue-rotate(90deg) saturate(500%);
+    display: flex; align-items: center; justify-content: center;
+}
+.terminal-bg-gear lottie-player { width: 80%; height: 80%; }
+
 .crt-scanlines {
     position: absolute; inset: 0; pointer-events: none; z-index: 10;
     background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.3) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
-    background-size: 100% 4px, 3px 100%;
-    animation: crtFlicker 0.15s infinite;
+    background-size: 100% 4px, 3px 100%; animation: crtFlicker 0.15s infinite;
 }
 @keyframes crtFlicker { 0% { opacity: 0.95; } 50% { opacity: 1; } 100% { opacity: 0.9; } }
 
 .terminal-content {
-    width: 90%; max-width: 900px; height: 80vh;
-    background: #020202; border: 2px solid #0f0; padding: 30px; position: relative; z-index: 20;
-    display: flex; flex-direction: column; text-transform: uppercase;
-    box-shadow: 0 0 40px rgba(0,255,0,0.1), inset 0 0 20px rgba(0,255,0,0.05);
+    width: 90%; max-width: 900px; height: 80vh; background: rgba(2,2,2,0.9); border: 2px solid #0f0; padding: 30px; position: relative; z-index: 20;
+    display: flex; flex-direction: column; text-transform: uppercase; box-shadow: 0 0 40px rgba(0,255,0,0.1), inset 0 0 20px rgba(0,255,0,0.05);
 }
 .terminal-header { display: flex; justify-content: space-between; border-bottom: 2px solid #0f0; padding-bottom: 15px; margin-bottom: 25px; font-size: 1.5rem; }
-#close-terminal { cursor: none; color: #f00; text-shadow: 0 0 8px #f00; transition: 0.3s; }
+#close-terminal { cursor: pointer; color: #f00; text-shadow: 0 0 8px #f00; transition: 0.3s; }
 #close-terminal:hover { color: #fff; text-shadow: 0 0 12px #fff; }
 .terminal-body { flex-grow: 1; font-size: 1.4rem; line-height: 1.6; white-space: pre-wrap; overflow-y: auto; }
 .typed-cursor { display: inline-block; width: 10px; height: 1.2rem; background-color: #0f0; animation: blink 1s step-end infinite; vertical-align: middle; }
 
 /* ==========================================
-   07. MISC LAYOUT SECTIONS
+   09. MISC LAYOUT & DYNAMIC FOOTER
 ========================================== */
 .matrix-container { width: 100%; max-width: 1100px; margin: 0 auto; pointer-events: all; }
 .grid-2-col { display: grid; grid-template-columns: 1fr 1fr; border: 1px solid rgba(255,255,255,0.05); border-radius: 6px; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
-.matrix-card { max-width: 100%; border: none; border-radius: 0; box-shadow: none; background: rgba(10, 10, 10, 0.7); }
+.matrix-card { max-width: 100%; border: none; border-radius: 0; box-shadow: none; background: rgba(10, 10, 10, 0.8); } 
 .skill-list { list-style: none; }
 .skill-list li { margin-bottom: 20px; font-size: 0.85rem; color: #ccc; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 15px; }
 .skill-list li:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
@@ -255,12 +295,12 @@ lottie-player {
 .timeline-date { font-size: 0.55rem; margin-bottom: 15px; display: block; }
 .timeline-content { padding: 40px; max-width: 100%; border-left: none; border-top: 2px solid rgba(255,102,0,0.5); }
 
-.magnetic { display: inline-block; position: relative; }
-.cta-btn { padding: 15px 35px; background: transparent; border: 1px solid var(--neon); color: #fff; font-family: 'Syncopate', sans-serif; font-size: 0.7rem; letter-spacing: 2px; text-transform: uppercase; position: relative; overflow: hidden; }
+.magnetic { display: inline-block; position: relative; cursor: pointer; }
+.cta-btn { padding: 15px 35px; background: transparent; border: 1px solid var(--neon); color: #fff; font-family: 'Syncopate', sans-serif; font-size: 0.7rem; letter-spacing: 2px; text-transform: uppercase; position: relative; overflow: hidden; cursor: pointer; }
 .cta-btn::before { content: ''; position: absolute; top: 50%; left: 50%; width: 150%; height: 150%; background: radial-gradient(circle, rgba(255,102,0,0.4) 0%, transparent 70%); transform: translate(-50%, -50%) scale(0); transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1); z-index: -1; }
 .cta-btn:hover::before { transform: translate(-50%, -50%) scale(1); }
 
-.status-grid { display: flex; gap: 80px; text-align: center; pointer-events: all; }
+.status-grid { display: flex; gap: 80px; text-align: center; pointer-events: all; position: relative; z-index: 30; }
 .status-item span { display: block; font-size: 0.7rem; color: #777; letter-spacing: 2px; margin-bottom: 10px; font-family: 'Syncopate', sans-serif;}
 .status-item strong { font-size: 2rem; color: var(--neon); font-family: 'Syncopate', sans-serif; text-shadow: 0 0 15px rgba(255,102,0,0.4); }
 
@@ -273,29 +313,23 @@ lottie-player {
 .nav-links a { text-decoration: none; color: #fff !important; font-weight: 900; font-size: 0.7rem; letter-spacing: 2px; transition: 0.3s; }
 .nav-links a:hover { color: var(--neon) !important; text-shadow: 0 0 15px var(--neon); }
 
-#loader { position: fixed; inset: 0; background: #030303; z-index: 9999; display: flex; align-items: center; justify-content: center; }
-.loader-text { font-family: 'Syncopate', sans-serif; color: var(--neon); letter-spacing: 10px; font-size: 0.9rem; margin-bottom: 20px; text-align: center; }
-.progress-bar { width: 300px; height: 1px; background: #222; position: relative; }
-.progress-fill { width: 0%; height: 100%; background: var(--neon); box-shadow: 0 0 15px var(--neon); }
-.loader-details { font-family: 'Syncopate', sans-serif; font-size: 0.45rem; color: #555; margin-top: 15px; letter-spacing: 3px; text-align: center; }
-#enter-btn { padding: 15px 40px; background: transparent; border: 1px solid var(--neon); color: var(--neon); font-family: 'Syncopate', sans-serif; cursor: none; margin-top: 25px; transition: 0.3s; }
-#enter-btn:hover { background: var(--neon); color: #000; box-shadow: 0 0 20px var(--neon); }
+/* The New Dynamic Island Footer */
+.cyber-footer { padding: 100px 10%; border-top: 1px solid rgba(255, 102, 0, 0.1); background: linear-gradient(to bottom, transparent, rgba(3,3,3,0.9)); pointer-events: all; position: relative; z-index: 10; overflow: hidden; }
+.footer-dynamic-island { display: flex; justify-content: space-between; align-items: center; width: 100%; max-width: 1200px; margin: 0 auto; }
+.speaker-zone lottie-player { width: 220px; height: 220px; filter: drop-shadow(0 0 20px rgba(255, 102, 0, 0.3)); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+.speaker-zone:hover lottie-player { transform: scale(1.15) rotate(-5deg); }
+.brand-zone { text-align: center; }
+.morty-zone lottie-player { width: 200px; height: 200px; filter: drop-shadow(0 10px 15px rgba(0,0,0,0.5)); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+.morty-zone:hover lottie-player { transform: scale(1.1) rotate(5deg); }
 
-.cyber-footer { padding: 100px 10%; border-top: 1px solid rgba(255, 102, 0, 0.1); background: linear-gradient(to bottom, transparent, #030303); pointer-events: all; }
-.footer-content { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 50px; }
-.footer-logo { font-family: 'Syncopate', sans-serif; color: var(--neon); margin-bottom: 20px; font-size: 1.5rem; }
-.links-col h3 { font-size: 0.8rem; letter-spacing: 3px; margin-bottom: 20px; color: #666; font-family: 'Syncopate', sans-serif;}
-.links-col ul { list-style: none; }
-.links-col li { margin-bottom: 12px; }
-.links-col a { color: #ccc; text-decoration: none; font-size: 0.85rem; transition: 0.3s; }
-.links-col a:hover { color: var(--neon); }
-.social-icons { display: flex; gap: 20px; }
+.footer-logo { font-family: 'Syncopate', sans-serif; color: var(--neon); margin-bottom: 10px; font-size: 1.5rem; }
+.social-icons { display: flex; gap: 20px; justify-content: center; }
 .social-btn { width: 45px; height: 45px; border: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; color: #fff; text-decoration: none; transition: 0.3s; border-radius: 50%; }
 .social-btn:hover { border-color: var(--neon); color: var(--neon); box-shadow: 0 0 15px rgba(255, 102, 0, 0.4); transform: translateY(-3px); }
-.footer-bottom { margin-top: 80px; padding-top: 30px; border-top: 1px solid rgba(255,255,255,0.05); text-align: center; font-size: 0.7rem; color: #555; letter-spacing: 3px; font-family: 'Syncopate', sans-serif;}
+.footer-bottom { margin-top: 60px; padding-top: 30px; border-top: 1px solid rgba(255,255,255,0.05); text-align: center; font-size: 0.7rem; color: #555; letter-spacing: 3px; font-family: 'Syncopate', sans-serif;}
 
 /* ==========================================
-   08. RESPONSIVENESS & MOBILE FALLBACKS
+   10. RESPONSIVENESS & MOBILE FALLBACKS
 ========================================== */
 @media (max-width: 1000px) {
     .hero-layout-grid { grid-template-columns: 1fr; text-align: center; gap: 60px; }
@@ -306,9 +340,8 @@ lottie-player {
     .hud-label { color: #aaa; }
     .hud-value { color: #fff; text-shadow: 0 0 10px #fff; }
     .blink { color: #fff; }
-    .hud-decoration svg circle { stroke: #fff; }
-    .hud-decoration svg circle[fill="#000"] { fill: #fff; }
-    .main-title { font-size: 3.5rem; }
+    .hud-panel #hud-pulse { filter: invert(0) !important; } 
+    .main-title { font-size: 4rem; }
     .hero-line { margin: 20px auto; }
 }
 
@@ -317,14 +350,13 @@ lottie-player {
     .grid-2-col { grid-template-columns: 1fr; }
     .glass-card.matrix-card.border-left-split { border-left: none !important; border-top: 1px solid rgba(255,102,0,0.2); }
     .status-grid { flex-direction: column; gap: 40px; }
-    .footer-content { grid-template-columns: 1fr; text-align: center; }
-    .social-icons { justify-content: center; }
+    .footer-dynamic-island { flex-direction: column; gap: 50px; text-align: center; }
     .nav-links { display: none; }
     .bg-text { font-size: 25vw; }
 }
 
 @media (max-width: 600px) {
-    .main-title { font-size: 2.5rem; }
+    .main-title { font-size: 3rem; }
     .glass-card { padding: 40px 20px; }
     .timeline { padding-left: 30px; }
     .timeline::before { left: 7px; }
@@ -334,5 +366,6 @@ lottie-player {
     .summary-card { padding: 40px 20px; }
     .summary-stats { grid-template-columns: 1fr; gap: 15px; }
     #cat-trigger { top: -70px; right: -5px; }
-    lottie-player { width: 120px; height: 120px; }
+    #cat-trigger lottie-player { width: 120px; height: 120px; }
+    .captcha-panel { width: 95%; padding: 25px 20px; }
 }
