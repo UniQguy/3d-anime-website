@@ -8,8 +8,10 @@
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
-body { background: var(--bg); color: #fff; font-family: 'Inter', sans-serif; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
-#smooth-wrapper { width: 100%; overflow: hidden; }
+body { background: var(--bg); color: #fff; font-family: 'Inter', sans-serif; overflow-x: hidden; width: 100vw; -webkit-font-smoothing: antialiased; }
+
+/* Prevent footer from clipping while hiding horizontal scroll */
+#smooth-wrapper { width: 100%; overflow-x: hidden; overflow-y: visible; position: relative; z-index: 10; }
 
 .section, .glass-card, .hero-card, .hud-panel, .captcha-panel {
     transform: translateZ(0); backface-visibility: hidden; -webkit-backface-visibility: hidden; will-change: transform, opacity;
@@ -18,7 +20,7 @@ body { background: var(--bg); color: #fff; font-family: 'Inter', sans-serif; ove
 /* ==========================================
    01. 3D CANVAS & BACKGROUND BRANDING
 ========================================== */
-#webgl-canvas { position: fixed; inset: 0; z-index: 5; pointer-events: none; }
+#webgl-canvas { position: fixed; inset: 0; z-index: 1 !important; pointer-events: none !important; }
 .bg-text-container { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; z-index: -1; }
 .bg-text { font-size: 18vw; font-weight: 900; color: transparent; -webkit-text-stroke: 1px rgba(255, 102, 0, 0.05); text-transform: uppercase; white-space: nowrap; will-change: transform; }
 
@@ -29,11 +31,12 @@ body { background: var(--bg); color: #fff; font-family: 'Inter', sans-serif; ove
 .word-wrapper { display: inline-block; transform: translateY(110%); transform-origin: top left; will-change: transform; }
 .fade-up { opacity: 0; transform: translateY(30px); will-change: transform, opacity; }
 
-.main-title { font-size: 5.5rem; font-family: 'Inter', sans-serif; margin-bottom: 20px; text-transform: uppercase; letter-spacing: -2px; }
+/* Responsive Main Title */
+.main-title { position: relative; z-index: 500 !important; font-size: clamp(3rem, 6vw, 5.5rem); font-family: 'Inter', sans-serif; margin-bottom: 20px; text-transform: uppercase; letter-spacing: -2px; }
 .text-outline { color: transparent; -webkit-text-stroke: 2px rgba(255, 255, 255, 0.9); display: block; line-height: 1.1; }
 .text-solid { color: #fff; font-weight: 900; display: block; line-height: 0.95; text-shadow: 0 10px 30px rgba(0,0,0,0.8); }
 
-.section { min-height: 100vh; display: flex; align-items: center; padding: 100px 10%; position: relative; z-index: 10; perspective: 1500px; }
+.section { position: relative; z-index: 100; min-height: 100vh; display: flex; align-items: center; padding: 100px 10%; perspective: 1500px; width: 100%; max-width: 100vw; box-sizing: border-box; }
 .side-content { justify-content: flex-start; }
 .right-content { justify-content: flex-end; }
 .center-content { justify-content: center; flex-direction: column; }
@@ -42,7 +45,7 @@ body { background: var(--bg); color: #fff; font-family: 'Inter', sans-serif; ove
 /* ==========================================
    03. THE DELAYED BUTTON UFO LOADER
 ========================================== */
-#loader { position: fixed; inset: 0; background: #030303; z-index: 9999; display: flex; align-items: center; justify-content: center; }
+#loader { position: fixed; inset: 0; background: #030303; z-index: 99999 !important; display: flex; align-items: center; justify-content: center; }
 
 .captcha-panel {
     background: rgba(10, 10, 10, 0.8); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
@@ -57,7 +60,6 @@ body { background: var(--bg); color: #fff; font-family: 'Inter', sans-serif; ove
 .ufo-hero-wrapper { width: 220px; height: 160px; margin: 0 auto; pointer-events: none; }
 .ufo-hero-wrapper lottie-player { width: 100%; height: 100%; filter: drop-shadow(0 15px 20px rgba(0,0,0,0.6)); }
 
-/* CRITICAL FIX: The Enter Site Button CSS */
 #enter-btn {
     padding: 15px 40px;
     background: rgba(255, 102, 0, 0.1);
@@ -70,24 +72,17 @@ body { background: var(--bg); color: #fff; font-family: 'Inter', sans-serif; ove
     cursor: pointer;
     border-radius: 4px;
     margin-top: 20px;
-    
-    /* Starts invisible and unclickable */
     opacity: 0;
-    pointer-events: none;
+    visibility: hidden; 
+    pointer-events: auto !important; 
     transform: translateY(10px);
-    
-    /* Waits 2.5s for UFO animation to finish, then triggers keyframe */
     animation: revealButton 0.8s ease forwards;
-    animation-delay: 2.5s; 
+    animation-delay: 2.5s;
     transition: all 0.3s ease;
 }
 
 @keyframes revealButton {
-    to { 
-        opacity: 1; 
-        pointer-events: auto; /* MUST BE 'auto' SO IT CLICKS */
-        transform: translateY(0);
-    }
+    to { opacity: 1; visibility: visible; transform: translateY(0); }
 }
 
 #enter-btn:hover { background: var(--neon); color: #000; box-shadow: 0 0 25px rgba(255, 102, 0, 0.6); transform: translateY(-3px); }
@@ -95,7 +90,7 @@ body { background: var(--bg); color: #fff; font-family: 'Inter', sans-serif; ove
 /* ==========================================
    04. THE HERO GRID & DYNAMIC HUD
 ========================================== */
-.hero-layout-grid { display: grid; grid-template-columns: 1fr 1.5fr 1fr; width: 100%; align-items: center; }
+.hero-layout-grid { position: relative; z-index: 500 !important; display: grid; grid-template-columns: 1fr 1.5fr 1fr; width: 100%; align-items: center; }
 .hero-left { z-index: 20; pointer-events: auto; position: relative; }
 .hero-center { width: 100%; pointer-events: none; }
 .hero-right { z-index: 20; pointer-events: auto; display: flex; justify-content: flex-end; }
@@ -108,12 +103,12 @@ body { background: var(--bg); color: #fff; font-family: 'Inter', sans-serif; ove
 .hud-item { display: flex; flex-direction: column; align-items: flex-end; }
 .hud-label { font-family: 'Syncopate', sans-serif; font-size: 0.55rem; color: #444; letter-spacing: 3px; margin-bottom: 5px; font-weight: 700; transition: color 0.6s ease; }
 .hud-value { font-family: 'Inter', sans-serif; font-weight: 900; font-size: 1.1rem; color: #111; letter-spacing: 1px; text-shadow: 0 0 15px rgba(255,255,255,0.7); transition: all 0.6s ease; }
-#hud-pulse { filter: invert(1); transition: filter 0.6s ease; } 
+#hud-pulse { filter: invert(1); transition: filter 0.6s ease; }
 
 .hud-panel.scrolled { border-right-color: var(--neon); }
 .hud-panel.scrolled .hud-label { color: #aaa; }
 .hud-panel.scrolled .hud-value { color: #fff; text-shadow: 0 0 15px rgba(255,102,0,0.5); }
-.hud-panel.scrolled #hud-pulse { filter: invert(0); } 
+.hud-panel.scrolled #hud-pulse { filter: invert(0); }
 
 .blink { animation: blinkStatus 1.5s infinite; }
 @keyframes blinkStatus { 0%, 100% { opacity: 1; } 50% { opacity: 0.2; } }
@@ -121,7 +116,7 @@ body { background: var(--bg); color: #fff; font-family: 'Inter', sans-serif; ove
 /* ==========================================
    05. DECORATIVE LOTTIE ANIMATIONS
 ========================================== */
-.deep-web-bg { position: fixed; bottom: 0; left: 0; width: 100vw; height: 100vh; z-index: 1; opacity: 0.1; mix-blend-mode: screen; pointer-events: none; }
+.deep-web-bg { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 1; opacity: 0.1; mix-blend-mode: screen; pointer-events: none; overflow: hidden; display: flex; align-items: center; justify-content: center; }
 .deep-web-bg lottie-player { width: 100%; height: 100%; object-fit: cover; }
 
 .arsenal-lottie-bg { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 150vw; height: 150vh; z-index: -1; opacity: 0.15; pointer-events: none; }
@@ -132,9 +127,9 @@ body { background: var(--bg); color: #fff; font-family: 'Inter', sans-serif; ove
 ========================================== */
 .glass-card {
     background: var(--glass); backdrop-filter: blur(25px) saturate(180%); -webkit-backdrop-filter: blur(25px) saturate(180%);
-    border: 1px solid rgba(255, 255, 255, 0.05); border-left: 2px solid rgba(255, 102, 0, 0.8); 
-    padding: 60px; border-radius: 6px; max-width: 550px; pointer-events: auto;
-    box-shadow: 0 20px 50px rgba(0,0,0,0.6); transform-style: preserve-3d;
+    border: 1px solid rgba(255, 255, 255, 0.05); border-left: 2px solid rgba(255, 102, 0, 0.8);
+    padding: 60px; border-radius: 6px; width: 100%; max-width: 550px; pointer-events: auto;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.6); transform-style: preserve-3d; box-sizing: border-box;
 }
 .tag { font-family: 'Syncopate', sans-serif; font-size: 0.6rem; color: var(--neon); letter-spacing: 4px; display: block; margin-bottom: 20px; text-shadow: 0 0 10px rgba(255,102,0,0.3); }
 .glass-card h2 { font-family: 'Syncopate', sans-serif; margin-bottom: 20px; font-size: 2rem; line-height: 1.1; }
@@ -174,11 +169,11 @@ body { background: var(--bg); color: #fff; font-family: 'Inter', sans-serif; ove
 .typed-cursor { display: inline-block; width: 10px; height: 1.2rem; background-color: #0f0; animation: blink 1s step-end infinite; vertical-align: middle; }
 
 /* ==========================================
-   09. MISC LAYOUT & DYNAMIC FOOTER
+   09. MISC LAYOUT COMPONENTS
 ========================================== */
 .matrix-container { width: 100%; max-width: 1100px; margin: 0 auto; pointer-events: auto; }
 .grid-2-col { display: grid; grid-template-columns: 1fr 1fr; border: 1px solid rgba(255,255,255,0.05); border-radius: 6px; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
-.matrix-card { max-width: 100%; border: none; border-radius: 0; box-shadow: none; background: rgba(10, 10, 10, 0.8); } 
+.matrix-card { max-width: 100%; border: none; border-radius: 0; box-shadow: none; background: rgba(10, 10, 10, 0.8); }
 .skill-list { list-style: none; }
 .skill-list li { margin-bottom: 20px; font-size: 0.85rem; color: #ccc; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 15px; }
 .skill-list li:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
@@ -204,7 +199,8 @@ body { background: var(--bg); color: #fff; font-family: 'Inter', sans-serif; ove
 .status-item span { display: block; font-size: 0.7rem; color: #777; letter-spacing: 2px; margin-bottom: 10px; font-family: 'Syncopate', sans-serif;}
 .status-item strong { font-size: 2rem; color: var(--neon); font-family: 'Syncopate', sans-serif; text-shadow: 0 0 15px rgba(255,102,0,0.4); }
 
-.video-navbar { position: absolute; top: 0; width: 100%; height: 80px; z-index: 100; border-bottom: 1px solid rgba(255, 102, 0, 0.1); background: rgba(3, 3, 3, 0.5); backdrop-filter: blur(10px); }
+/* Top Navigation */
+.video-navbar { position: absolute; top: 0; width: 100%; height: 80px; z-index: 9999 !important; border-bottom: 1px solid rgba(255, 102, 0, 0.1); background: rgba(3, 3, 3, 0.5); backdrop-filter: blur(10px); }
 .nav-video-bg { position: absolute; inset: 0; z-index: -1; overflow: hidden; }
 .nav-video-bg video { width: 100%; height: 100%; object-fit: cover; filter: brightness(0.15); }
 .nav-content { display: flex; justify-content: space-between; align-items: center; height: 100%; padding: 0 50px; }
@@ -213,22 +209,105 @@ body { background: var(--bg); color: #fff; font-family: 'Inter', sans-serif; ove
 .nav-links a { text-decoration: none; color: #fff !important; font-weight: 900; font-size: 0.7rem; letter-spacing: 2px; transition: 0.3s; }
 .nav-links a:hover { color: var(--neon) !important; text-shadow: 0 0 15px var(--neon); }
 
-.cyber-footer { padding: 100px 10%; border-top: 1px solid rgba(255, 102, 0, 0.1); background: linear-gradient(to bottom, transparent, rgba(3,3,3,0.9)); pointer-events: auto; position: relative; z-index: 10; overflow: hidden; }
-.footer-dynamic-island { display: flex; justify-content: space-between; align-items: center; width: 100%; max-width: 1200px; margin: 0 auto; }
-.speaker-zone lottie-player { width: 220px; height: 220px; filter: drop-shadow(0 0 20px rgba(255, 102, 0, 0.3)); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-.speaker-zone:hover lottie-player { transform: scale(1.15) rotate(-5deg); }
-.brand-zone { text-align: center; }
-.morty-zone lottie-player { width: 200px; height: 200px; filter: drop-shadow(0 10px 15px rgba(0,0,0,0.5)); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-.morty-zone:hover lottie-player { transform: scale(1.1) rotate(5deg); }
+/* ==========================================
+   10. DYNAMIC STRAW HAT ORBITAL FOOTER
+========================================== */
+#dynamic-footer-scene {
+    position: relative;
+    height: 100vh; /* Full screen frame for the hat */
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none; /* Let canvas interactions pass through the background */
+    background: transparent !important; /* MUST be transparent to see the 3D hat */
+    z-index: 50;
+    overflow: hidden;
+}
 
+.hat-orbit-container {
+    position: absolute;
+    inset: 0;
+    max-width: 1400px;
+    margin: 0 auto;
+    pointer-events: none; 
+}
+
+/* Make individual elements clickable */
+.orbit-element, .social-btn { pointer-events: auto; }
+
+/* Fixed Footer Lottie Dimensions */
+.footer-lottie-speaker { width: 220px; height: 220px; filter: drop-shadow(0 0 20px rgba(255, 102, 0, 0.3)); transition: transform 0.3s ease; }
+.footer-lottie-morty { width: 200px; height: 200px; filter: drop-shadow(0 10px 15px rgba(0,0,0,0.5)); transition: transform 0.3s ease; }
+
+.speaker-zone { position: absolute; top: 15%; left: 8%; }
+.speaker-zone:hover .footer-lottie-speaker { transform: scale(1.15) rotate(-5deg); }
+
+.morty-zone { position: absolute; top: 15%; right: 8%; }
+.morty-zone:hover .footer-lottie-morty { transform: scale(1.1) rotate(5deg); }
+
+.brand-zone { position: absolute; bottom: 8%; left: 50%; transform: translateX(-50%); text-align: center; }
 .footer-logo { font-family: 'Syncopate', sans-serif; color: var(--neon); margin-bottom: 10px; font-size: 1.5rem; }
-.social-icons { display: flex; gap: 20px; justify-content: center; }
-.social-btn { width: 45px; height: 45px; border: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; color: #fff; text-decoration: none; transition: 0.3s; border-radius: 50%; }
-.social-btn:hover { border-color: var(--neon); color: var(--neon); box-shadow: 0 0 15px rgba(255, 102, 0, 0.4); transform: translateY(-3px); }
-.footer-bottom { margin-top: 60px; padding-top: 30px; border-top: 1px solid rgba(255,255,255,0.05); text-align: center; font-size: 0.7rem; color: #555; letter-spacing: 3px; font-family: 'Syncopate', sans-serif;}
+
+/* Social Orbit Layout */
+.social-orbit {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%; max-width: 800px;
+    height: 400px;
+    pointer-events: none;
+}
+
+.social-orbit .social-btn {
+    position: absolute;
+    width: 65px; height: 65px;
+    font-size: 1.5rem;
+    background: rgba(10, 10, 10, 0.6);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex; align-items: center; justify-content: center; 
+    color: #fff; text-decoration: none; border-radius: 50%;
+    transition: all 0.3s ease;
+}
 
 /* ==========================================
-   10. RESPONSIVENESS
+   11. CUSTOM DYNAMIC HOVER EFFECTS
+========================================== */
+.dynamic-hover { transition: all 0.3s ease; }
+
+/* Crazy cyberpunk vibration effect on hover */
+.dynamic-hover:hover {
+    animation: cyberVibrate 0.3s cubic-bezier(.36,.07,.19,.97) both infinite;
+    background: var(--neon) !important;
+    color: #000 !important;
+    border-color: #fff !important;
+    box-shadow: 0 0 25px var(--neon), inset 0 0 15px rgba(255,255,255,0.8);
+    z-index: 10;
+}
+
+@keyframes cyberVibrate {
+    0% { transform: translate(0) rotate(0deg) scale(1.15); }
+    20% { transform: translate(-3px, 3px) rotate(-8deg) scale(1.15); }
+    40% { transform: translate(-3px, -3px) rotate(8deg) scale(1.15); }
+    60% { transform: translate(3px, 3px) rotate(-8deg) scale(1.15); }
+    80% { transform: translate(3px, -3px) rotate(8deg) scale(1.15); }
+    100% { transform: translate(0) rotate(0deg) scale(1.15); }
+}
+
+/* Floating Initial States for Socials */
+.float-1 { top: 10%; left: 0; animation: floatIcon 4s ease-in-out infinite; }
+.float-2 { top: 10%; right: 0; animation: floatIcon 4.5s ease-in-out infinite 0.5s; }
+.float-3 { bottom: 10%; left: 15%; animation: floatIcon 3.5s ease-in-out infinite 1s; }
+.float-4 { bottom: 10%; right: 15%; animation: floatIcon 5s ease-in-out infinite 1.5s; }
+
+@keyframes floatIcon {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    50% { transform: translateY(-15px) rotate(5deg); box-shadow: 0 10px 20px rgba(255, 102, 0, 0.2); }
+}
+
+/* ==========================================
+   12. RESPONSIVENESS (MOBILE/TABLET)
 ========================================== */
 @media (max-width: 1000px) {
     .hero-layout-grid { grid-template-columns: 1fr; text-align: center; gap: 60px; }
@@ -240,22 +319,36 @@ body { background: var(--bg); color: #fff; font-family: 'Inter', sans-serif; ove
     .hud-value { color: #fff; text-shadow: 0 0 10px #fff; }
     .blink { color: #fff; }
     .hud-panel #hud-pulse { filter: invert(0) !important; } 
-    .main-title { font-size: 4rem; }
     .hero-line { margin: 20px auto; }
 }
 
 @media (max-width: 900px) {
-    .section { padding: 100px 5%; }
+    /* Responsive Content Spacing */
+    .section { padding: 80px 5%; }
     .grid-2-col { grid-template-columns: 1fr; }
     .glass-card.matrix-card.border-left-split { border-left: none !important; border-top: 1px solid rgba(255,102,0,0.2); }
     .status-grid { flex-direction: column; gap: 40px; }
-    .footer-dynamic-island { flex-direction: column; gap: 50px; text-align: center; }
     .nav-links { display: none; }
     .bg-text { font-size: 25vw; }
+    
+    /* FISH BACKGROUND MOBILE ROTATION (Covers 9:16 aspect ratio) */
+    #fish-bg {
+        transform: rotate(90deg) scale(1.8);
+        transform-origin: center center;
+    }
+    
+    /* Responsive Footer Animations */
+    .footer-lottie-speaker { width: 140px; height: 140px; }
+    .footer-lottie-morty { width: 130px; height: 130px; }
+    .speaker-zone { top: 5%; left: 5%; }
+    .morty-zone { top: 5%; right: 5%; }
+    
+    .social-orbit { max-width: 90vw; height: 350px; }
+    .float-3 { left: 5%; }
+    .float-4 { right: 5%; }
 }
 
 @media (max-width: 600px) {
-    .main-title { font-size: 3rem; }
     .glass-card { padding: 40px 20px; }
     .timeline { padding-left: 30px; }
     .timeline::before { left: 7px; }
@@ -267,4 +360,17 @@ body { background: var(--bg); color: #fff; font-family: 'Inter', sans-serif; ove
     #cat-trigger { top: -70px; right: -5px; }
     #cat-trigger lottie-player { width: 120px; height: 120px; }
     .captcha-panel { width: 95%; padding: 40px 20px; }
+    
+    .nav-content { padding: 0 20px; } 
+    .bg-text { font-size: 22vw; } 
+    
+    /* Extremely small mobile layout adjustments */
+    .footer-lottie-speaker { width: 100px; height: 100px; }
+    .footer-lottie-morty { width: 90px; height: 90px; }
+    .social-orbit { max-width: 100vw; height: 300px; }
+    .social-orbit .social-btn { width: 55px; height: 55px; font-size: 1.2rem; }
+    .brand-zone { bottom: 3%; width: 100%; }
+    
+    .float-1 { left: 5%; } 
+    .float-2 { right: 5%; }
 }
